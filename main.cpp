@@ -59,16 +59,7 @@ bool keyValidity (const string& key){
 }
 
 
-bool isAlpha(const string& msg){
-    for (auto i : msg){
-        if (! isalpha(i))
-            return false;
-    }
-    return true;
-}
-
-
-void polybiusSquareEncryption(const string& message){
+void polybius_square_encryption(const string& message){
     // App data
     string poly[6][6] = {{" ", "", "", "", "", ""},
                          {"", "A", "B", "C", "D", "E"},
@@ -78,7 +69,7 @@ void polybiusSquareEncryption(const string& message){
                          {"", "V", "W", "X", "Y", "Z"}};
 
     string keyInput;
-    cout << "Enter the polybiusSquareEncryption key: " << endl;
+    cout << "Enter the key: " << endl;
     cout << "->";
     cin >> keyInput;
 
@@ -121,13 +112,53 @@ void polybiusSquareEncryption(const string& message){
 }
 
 
-void polybiusSquareDecryption(const string& encrypted) {
+bool poly_decrypted_validity(const string& encrypted){
+    for (auto i : encrypted){
+        if (! isdigit(i)){
+            cout << "Invalid message. Encrypted messages should be digits only, try again." << endl;
+            cout << "->";
+            return false;
+        }
+    }
+
+    if (encrypted.length() % 2 != 0){
+        cout << "Invalid message." << endl;
+        cout << "->";
+        return false;
+    }
+    return true;
+}
+
+
+void polybius_square_decryption(string encrypted) {
     string poly[6][6] = {{" ", "",  "",  "",  "",  ""},
                          {"",  "A", "B", "C", "D", "E"},
                          {"",  "F", "G", "H", "I", "K"},
                          {"",  "L", "M", "N", "O", "P"},
                          {"",  "Q", "R", "S", "T", "U"},
                          {"",  "V", "W", "X", "Y", "Z"}};
+
+    string cleanEncrypted = "";
+    for (auto i: encrypted) {
+        if (!isdigit(i)) {}
+        else {
+            cleanEncrypted += i;
+        }
+    }
+
+    while(!poly_decrypted_validity(cleanEncrypted)){
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        getline(cin, encrypted);
+        cleanEncrypted = "";
+        for (auto i: encrypted) {
+            if (!isdigit(i))
+                continue;
+            else {
+                cleanEncrypted += i;
+            }
+        }
+    }
 
     cout << "Enter the key." << endl;
     cout << "->";
@@ -138,15 +169,6 @@ void polybiusSquareDecryption(const string& encrypted) {
         cout << "Enter the key." << endl;
         cout << "->";
         cin >> keyInput;
-    }
-
-    string cleanEncrypted;
-
-    for (auto i: encrypted) {
-        if (!isdigit(i)) {}
-        else {
-            cleanEncrypted += i;
-        }
     }
 
     // assigning keyInput to the poly square
@@ -342,27 +364,40 @@ int main() {
         if (menu == "3")
             break;
 
+
         else if (menu == "1"){
-            int cipher_choice;
-            cout << "what cipher would you like to use?" << endl;
+            cout << "Please enter the message to cipher." << endl;
+            cout << "->";
+
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            getline(cin, message);
+
+            cout << "Which Cipher do you like to choose?" << endl;
             cout << "1- polybius Square cipher" << endl;
             cout << "2- route cipher" << endl;
             cout << "3- rail-fence cipher" << endl;
             cout << "->";
-            cin >> cipher_choice;
-            while(true){
-                if (cipher_choice == 1){ // for the polybius square cipher encryption.
 
+            string cipher_choice;
+            cin >> cipher_choice;
+
+            while(true){
+                if (cipher_choice == "1"){ // for the polybius square cipher encryption.
+                    polybius_square_encryption(message);
                     break;
                 }
-                else if (cipher_choice == 2){
+
+                else if (cipher_choice == "2"){
                     route_cipher_encryption();
                     break;
                 }
-                else if (cipher_choice == 3){ // for the rail-fence cipher.
+
+                else if (cipher_choice == "3"){ // for the rail-fence cipher.
 
                     break;
                 }
+
                 else{
                     cout << "please enter a valid choice" << endl;
                 }
@@ -370,23 +405,32 @@ int main() {
         }
 
         else if (menu == "2"){
-            int cipher_choice;
+            cout << "Please enter the message to decipher." << endl;
+            cout << "->";
+
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            getline(cin, encrypted);
+
             cout << "what cipher would you like to use?" << endl;
             cout << "1- polybius Square cipher" << endl;
             cout << "2- route cipher" << endl;
             cout << "3- rail-fence cipher" << endl;
             cout << "->";
-            cin >> cipher_choice;
-            while(true){
-                if (cipher_choice == 1){ // for the polybius square cipher decryption.
 
+            string cipher_choice;
+            cin >> cipher_choice;
+
+            while(true){
+                if (cipher_choice == "1"){ // for the polybius square cipher decryption.
+                    polybius_square_decryption(encrypted);
                     break;
                 }
-                else if (cipher_choice == 2){
+                else if (cipher_choice == "2"){
                     route_cipher_decryption();
                     break;
                 }
-                else if (cipher_choice == 3){ // for the rail-fence cipher decryption.
+                else if (cipher_choice == "3"){ // for the rail-fence cipher decryption.
 
                     break;
                 }
@@ -394,10 +438,6 @@ int main() {
                     cout << "please enter a valid choice" << endl;
                 }
             }
-
         }
-
     }
-
-
 }
