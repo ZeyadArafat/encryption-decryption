@@ -343,24 +343,58 @@ int main() {
             break;
 
         else if (menu == "1"){
-            cout << "Please enter the message to cipher." << endl;
+            int cipher_choice;
+            cout << "what cipher would you like to use?" << endl;
+            cout << "1- polybius Square cipher" << endl;
+            cout << "2- route cipher" << endl;
+            cout << "3- rail-fence cipher" << endl;
             cout << "->";
-            cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            getline(cin, message);
+            cin >> cipher_choice;
+            while(true){
+                if (cipher_choice == 1){ // for the polybius square cipher encryption.
 
+                    break;
+                }
+                else if (cipher_choice == 2){
+                    route_cipher_encryption();
+                    break;
+                }
+                else if (cipher_choice == 3){ // for the rail-fence cipher.
 
-            polybiusSquareEncryption(message);
+                    break;
+                }
+                else{
+                    cout << "please enter a valid choice" << endl;
+                }
+            }
         }
 
         else if (menu == "2"){
-            cout << "Enter the encrypted message." << endl;
+            int cipher_choice;
+            cout << "what cipher would you like to use?" << endl;
+            cout << "1- polybius Square cipher" << endl;
+            cout << "2- route cipher" << endl;
+            cout << "3- rail-fence cipher" << endl;
             cout << "->";
-            cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            getline(cin, encrypted);
+            cin >> cipher_choice;
+            while(true){
+                if (cipher_choice == 1){ // for the polybius square cipher decryption.
 
-            polybiusSquareDecryption(encrypted);
+                    break;
+                }
+                else if (cipher_choice == 2){
+                    route_cipher_decryption();
+                    break;
+                }
+                else if (cipher_choice == 3){ // for the rail-fence cipher decryption.
+
+                    break;
+                }
+                else{
+                    cout << "please enter a valid choice" << endl;
+                }
+            }
+
         }
 
     }
