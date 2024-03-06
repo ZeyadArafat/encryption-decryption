@@ -205,19 +205,14 @@ void polybius_square_decryption(string encrypted) {
 }
 
 
-void route_cipher_encryption(){
+void route_cipher_encryption(string sentence_to_encrypt){
 
-    cout << "welcome to the route cipher encryption in order to encrypt some text you need to choose a secret key" << endl;
-    cout << "and then enter the text you need to encrypt" << endl << endl;
+    cout << "welcome to the route cipher encryption in order to encrypt some text you need to choose a secret key" << endl << endl;
 
     int secret_key;
     int character_counter = 0;
-    string sentence_to_encrypt;
     cout << "enter the secret key: ";
     cin >> secret_key;
-    cout << "enter the sentence or word you want to encrypt: ";
-    cin.ignore();
-    getline(cin, sentence_to_encrypt);
     string striped_sentence = strip(sentence_to_encrypt);
     int number_of_rows = ceil(static_cast<float>(striped_sentence.length()) / static_cast<float>(secret_key));
     string cipher_matrix[number_of_rows][secret_key];
@@ -280,19 +275,14 @@ void route_cipher_encryption(){
 }
 
 
-void route_cipher_decryption(){
+void route_cipher_decryption(string encrypted_sentence){
 
-    cout << "welcome to the route cipher decryption in order to decrypt some text you need to enter the secret key" << endl;
-    cout << "and then enter the text you need to decrypt" << endl << endl;
+    cout << "welcome to the route cipher decryption in order to decrypt some text you need to enter the secret key" << endl << endl;
 
 
     int secret_key;
-    string encrypted_sentence;
     cout << "enter the secret key: ";
     cin >> secret_key;
-    cout << "enter the sentence or word you want to decrypt: ";
-    cin.ignore();
-    getline(cin, encrypted_sentence);
     string striped_sentence = strip(encrypted_sentence);
     int number_of_rows = ceil(static_cast<float>(striped_sentence.length()) / static_cast<float>(secret_key));
     string cipher_matrix[number_of_rows][secret_key];
@@ -389,7 +379,7 @@ int main() {
                 }
 
                 else if (cipher_choice == "2"){
-                    route_cipher_encryption();
+                    route_cipher_encryption(message);
                     break;
                 }
 
@@ -427,7 +417,7 @@ int main() {
                     break;
                 }
                 else if (cipher_choice == "2"){
-                    route_cipher_decryption();
+                    route_cipher_decryption(encrypted);
                     break;
                 }
                 else if (cipher_choice == "3"){ // for the rail-fence cipher decryption.
