@@ -1,6 +1,19 @@
 #include <bits/stdc++.h>
 #include <cmath>
+#include <limits>
 using namespace std;
+
+
+int get_valid_key(){
+    int secret_key;
+    cout << "please enter the secret key: ";
+    while ( !(cin >> secret_key) || secret_key <= 0 ){
+        cout << "please enter a valid key(valid keys are integers bigger than 0)" << endl;
+        cin.clear();
+        cin.ignore();
+    }
+    return secret_key;
+}
 
 
 string strip(string sentece){
@@ -112,9 +125,9 @@ void polybius_square_encryption(const string& message){
 }
 
 
-bool poly_decrypted_validity(const string& encrypted){
+bool poly_decrypted_validity(string encrypted){
     for (auto i : encrypted){
-        if (! isdigit(i)){
+        if (isalpha(i)){
             cout << "Invalid message. Encrypted messages should be digits only, try again." << endl;
             cout << "->";
             return false;
@@ -140,14 +153,16 @@ void polybius_square_decryption(string encrypted) {
 
     string cleanEncrypted = "";
     for (auto i: encrypted) {
-        if (!isdigit(i)) {}
+        if (!isdigit(i)) {
+
+        }
         else {
             cleanEncrypted += i;
         }
     }
 
+
     while(!poly_decrypted_validity(cleanEncrypted)){
-        cin.clear();
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
         getline(cin, encrypted);
         cleanEncrypted = "";
@@ -209,10 +224,8 @@ void route_cipher_encryption(string sentence_to_encrypt){
 
     cout << "welcome to the route cipher encryption in order to encrypt some text you need to choose a secret key" << endl << endl;
 
-    int secret_key;
+    int secret_key = get_valid_key();
     int character_counter = 0;
-    cout << "enter the secret key: ";
-    cin >> secret_key;
     string striped_sentence = strip(sentence_to_encrypt);
     int number_of_rows = ceil(static_cast<float>(striped_sentence.length()) / static_cast<float>(secret_key));
     string cipher_matrix[number_of_rows][secret_key];
@@ -280,9 +293,7 @@ void route_cipher_decryption(string encrypted_sentence){
     cout << "welcome to the route cipher decryption in order to decrypt some text you need to enter the secret key" << endl << endl;
 
 
-    int secret_key;
-    cout << "enter the secret key: ";
-    cin >> secret_key;
+    int secret_key = get_valid_key();
     string striped_sentence = strip(encrypted_sentence);
     int number_of_rows = ceil(static_cast<float>(striped_sentence.length()) / static_cast<float>(secret_key));
     string cipher_matrix[number_of_rows][secret_key];
