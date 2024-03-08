@@ -1,10 +1,9 @@
 #include <bits/stdc++.h>
 #include <cmath>
-#include <limits>
 using namespace std;
 
 
-int get_valid_key(){
+int get_valid_key(){ // to make sure that the secret key of the route cipher is valid.
     int secret_key;
     cout << "please enter the secret key: ";
     while ( !(cin >> secret_key) || secret_key <= 0 ){
@@ -16,14 +15,14 @@ int get_valid_key(){
 }
 
 
-string strip(string sentece){
-    string result;
+string strip(string sentece){ // to remove the spaces in the text in the route cipher encryption .
+    string stripped_sentence;
     for(int i = 0; i < sentece.length(); i++){
         if(sentece[i] != ' '){
-            result += sentece[i];
+            stripped_sentence += sentece[i];
         }
     }
-    return result;
+    return stripped_sentence;
 }
 
 
@@ -222,129 +221,157 @@ void polybius_square_decryption(string encrypted) {
 
 void route_cipher_encryption(string sentence_to_encrypt){
 
+    // explian to the user what he needs to do in order to encrypt the text.
     cout << "welcome to the route cipher encryption in order to encrypt some text you need to choose a secret key" << endl << endl;
 
-    int secret_key = get_valid_key();
-    int character_counter = 0;
-    string striped_sentence = strip(sentence_to_encrypt);
-    int number_of_rows = ceil(static_cast<float>(striped_sentence.length()) / static_cast<float>(secret_key));
+    int secret_key = get_valid_key(); // getting the secret key and checking it's validity.
+    int character_counter = 0; // this counter will help create the matrix of the cipher.
+    string stripped_sentence = strip(sentence_to_encrypt); // stripping the text from any spaces.
+    int number_of_rows = ceil(static_cast<float>(stripped_sentence.length()) / static_cast<float>(secret_key));// calculating the number of rows in the matrix.
     string cipher_matrix[number_of_rows][secret_key];
+    // filling the matrix with the character of the text.
     for(int i = 0; i < number_of_rows; i++){
         for (int j = 0; j < secret_key; j++){
-            if(character_counter < striped_sentence.length()){
-                cipher_matrix[i][j] = striped_sentence[character_counter];
+            if(character_counter < stripped_sentence.length()){
+                cipher_matrix[i][j] = stripped_sentence[character_counter];
                 character_counter++;
             }
+            // filling the rest of the matrix with x's.
             else {
                 cipher_matrix[i][j] = "x";
             }
 
         }
     }
-    int direction = 0;
-    int space_down = number_of_rows-1;
-    int space_up = 0;
-    int space_left = secret_key-1;
-    int space_right = 0;
+
+    // the rest of the function is for the spiral iteration.
+    // there is a pattern in the iteration, you go down then left then up then right and repeat, all inside the 2d array(matrix).
+    int direction = 0; // creating a direction variable to switch between directions.
+    // four variables to indicate the start from each direction.
+    int start_down = number_of_rows-1;
+    int start_up = 0;
+    int start_right = secret_key-1;
+    int start_left = 0;
     string encrypted_sentence;
-    int counter = 0;
+    int counter = 0; // the counter to stop the spiral iteration when done.
     while(counter < secret_key*number_of_rows){
-        if(direction == 0){
-            for (int i = space_up; i <= space_down; i++){
-                encrypted_sentence += cipher_matrix[i][space_left];
-                counter++;
+        if(direction == 0){ // direction 0 means going down in the matrix.
+        // the start point is the top right corner [start_up][start_right].
+        // while going down we are moving in the most right column (start_right) and change the row index from 0(start_up) to (start_down).
+            for (int i = start_up; i <= start_down; i++){
+                encrypted_sentence += cipher_matrix[i][start_right];
+                counter++; // increasing the counter to stop the while loop.
             }
-            space_left--;
-            direction = 1;
+            start_right--; // changing the start_right value so we don't get the same column when going down again.
+            direction = 1; // changing the direction as planned in the iteration pattern.
         }
-        else if (direction == 1){
-            for (int i = space_left; i >= space_right ; i--){
-                encrypted_sentence += cipher_matrix[space_down][i];
+        // all the other loops work with the same logic.
+
+
+        else if (direction == 1){ // direction 1 means going left in the matrix.
+            for (int i = start_right; i >= start_left; i--){
+                encrypted_sentence += cipher_matrix[start_down][i];
                 counter++;
             }
-            space_down--;
+            start_down--;
             direction = 2;
         }
 
-        else if (direction == 2){
-            for (int i = space_down; i >= space_up; i--){
-                encrypted_sentence += cipher_matrix[i][space_right];
+
+        else if (direction == 2){ // direction 2 means going up in the matrix.
+            for (int i = start_down; i >= start_up; i--){
+                encrypted_sentence += cipher_matrix[i][start_left];
                 counter++;
             }
-            space_right++;
+            start_left++;
             direction = 3;
         }
-        else if (direction == 3){
-            for (int i = space_right; i <= space_left; i++){
-                encrypted_sentence += cipher_matrix[space_up][i];
+
+
+        else if (direction == 3){ // direction 3 means going right in the matrix.
+            for (int i = start_left; i <= start_right; i++){
+                encrypted_sentence += cipher_matrix[start_up][i];
                 counter++;
             }
-            space_up++;
+            start_up++;
             direction = 0;
         }
     }
-    cout << encrypted_sentence << endl << endl;
+
+    cout << encrypted_sentence << endl << endl; // printing the encrypted text.
 
 }
 
 
 void route_cipher_decryption(string encrypted_sentence){
 
+    // explian to the user what he needs to do in order to decrypt the text.
     cout << "welcome to the route cipher decryption in order to decrypt some text you need to enter the secret key" << endl << endl;
 
 
-    int secret_key = get_valid_key();
-    string striped_sentence = strip(encrypted_sentence);
-    int number_of_rows = ceil(static_cast<float>(striped_sentence.length()) / static_cast<float>(secret_key));
+    int secret_key = get_valid_key(); // getting the secret key and checking it's validity.
+    string stripped_sentence = strip(encrypted_sentence);// stripping the text from any spaces.
+    int number_of_rows = ceil(static_cast<float>(stripped_sentence.length()) / static_cast<float>(secret_key));// calculating the number of rows in the matrix.
     string cipher_matrix[number_of_rows][secret_key];
-    int direction = 0;
-    int space_down = number_of_rows-1;
-    int space_up = 0;
-    int space_left = secret_key-1;
-    int space_right = 0;
+    int direction = 0;// creating a direction variable to switch between directions.
+    // four variables to indicate the start from each direction.
+    int start_down = number_of_rows-1;
+    int start_up = 0;
+    int start_right = secret_key-1;
+    int start_left = 0;
     string decrypted_sentence;
     int counter = 0;
+
+    // filling the matrix with the character of the text in a spiral way.
     while(counter < secret_key*number_of_rows){
+        // the start point is the top right corner [start_up][start_right].
+        // while going down we are moving in the most right column (start_right) and change the row index from 0(start_up) to (start_down).
         if(direction == 0){
-            for (int i = space_up; i <= space_down; i++){
-                cipher_matrix[i][space_left] = striped_sentence[counter];
-                counter++;
+            for (int i = start_up; i <= start_down; i++){
+                cipher_matrix[i][start_right] = stripped_sentence[counter]; // adding the characters of the text to the matrix.
+                counter++; // increasing the counter to stop the while loop.
             }
-            space_left--;
-            direction = 1;
+            start_right--; // changing the start_right value so we don't get the same column when going down again.
+            direction = 1; // changing the direction as planned in the iteration pattern.
         }
-        else if (direction == 1){
-            for (int i = space_left; i >= space_right ; i--){
-                cipher_matrix[space_down][i] = striped_sentence[counter];
+        // all the other loops work with the same logic.
+
+
+        else if (direction == 1){ // direction 1 means going left in the matrix.
+            for (int i = start_right; i >= start_left; i--){
+                cipher_matrix[start_down][i] = stripped_sentence[counter];
                 counter++;
             }
-            space_down--;
+            start_down--;
             direction = 2;
         }
 
-        else if (direction == 2){
-            for (int i = space_down; i >= space_up; i--){
-                cipher_matrix[i][space_right] = striped_sentence[counter];
+        else if (direction == 2){ // direction 2 means going up in the matrix.
+            for (int i = start_down; i >= start_up; i--){
+                cipher_matrix[i][start_left] = stripped_sentence[counter];
                 counter++;
             }
-            space_right++;
+            start_left++;
             direction = 3;
         }
-        else if (direction == 3){
-            for (int i = space_right; i <= space_left; i++){
-                cipher_matrix[space_up][i] = striped_sentence[counter];
+
+        else if (direction == 3){ // direction 3 means going right in the matrix.
+            for (int i = start_left; i <= start_right; i++){
+                cipher_matrix[start_up][i] = stripped_sentence[counter];
                 counter++;
             }
-            space_up++;
+            start_up++;
             direction = 0;
         }
     }
+
+    // reading the characters in the matrix in the right order.
     for (int i = 0; i < number_of_rows; i++){
         for (int j = 0; j < secret_key; j++){
-            decrypted_sentence += cipher_matrix[i][j];
+            decrypted_sentence += cipher_matrix[i][j]; // adding characters to the decrypted sentence
         }
     }
-    cout << decrypted_sentence << endl << endl;
+    cout << decrypted_sentence << endl << endl; // printing the decrypted text
 }
 
 
