@@ -1,3 +1,6 @@
+/**/
+
+
 #include <bits/stdc++.h>
 #include <cmath>
 #include <cctype>
@@ -485,9 +488,11 @@ void rail_Fence_Encrypt(const string& message) {
                     cout << c;
                 }
                 cout << endl;
-                
+
             }
 }
+
+
 void rail_Fence_Decrypt(const string& message) {
     // set main variables
     string text = message, key, decrypted_text;
@@ -564,6 +569,8 @@ void rail_Fence_Decrypt(const string& message) {
                 cout << "Decrypt text is :  " << decrypted_text << endl ;
             }
 }
+
+
 int main() {
     string message, encrypted;
     cout << "Ahlan ya user ya habibi." << endl;
