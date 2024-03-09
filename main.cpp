@@ -1,5 +1,8 @@
 #include <bits/stdc++.h>
 #include <cmath>
+#include <cctype>
+#include <string>
+#include <vector>
 using namespace std;
 
 
@@ -390,15 +393,16 @@ void rail_Fence_Encrypt(const string& message) {
 
     // print welcome message
     cout << "welcome to Rail Fence encrypt program " << endl;
-
-    while (true) {
         // let user select the key
         cout << "please choose the key 3 or 4 :  " ;
+        cin.ignore();
         getline(cin , key ) ;
         //check validation of key
-        if (key == "3" || key == "4")
-        {
-            int num = stoi(key);
+        while (key != "3" && key != "4") {
+        cout << "Invalid key. Please choose the key 3 or 4: ";
+        getline(cin, key);
+            }
+            num = stoi(key);
             if( num == 3 ) {
                 // make 3 lists
                 vector <char> list1 , list2 , list3;
@@ -426,7 +430,6 @@ void rail_Fence_Encrypt(const string& message) {
                     cout << c;
                 }
                 cout << endl;
-                break;
             }
             else if (num == 4) {
                 // make 4 lists
@@ -482,33 +485,23 @@ void rail_Fence_Encrypt(const string& message) {
                     cout << c;
                 }
                 cout << endl;
-                break;
+                
             }
-            else {
-                continue;
-            }
-        }
-        else{
-            continue;
-        }
-    break;
-    }
 }
-
-
 void rail_Fence_Decrypt(const string& message) {
     // set main variables
     string text = message, key, decrypted_text;
     int num;
     // print welcome message
     cout << "welcome to Rail Fence encrypt program " << endl;
-
-    while (true) {
         // let user choose the key
         cout << "please choose the key 3 or 4 :  " ;
+        cin.ignore();
         getline(cin , key ) ;
-        if (key == "3" || key == "4")
-        {
+        while (key != "3" && key != "4") {
+            cout << "Invalid key. Please choose the key 3 or 4: ";
+            getline(cin, key);
+        }
             num = stoi(key) ;
             if(num == 3 ) {
                 int len = text.length();
@@ -539,7 +532,6 @@ void rail_Fence_Decrypt(const string& message) {
                 }
                 // print the result
                 cout << "Decrypt text is :  " << decrypted_text << endl ;
-                break;
             }
             else if (num == 4) {
                 int len = text.length();
@@ -570,19 +562,8 @@ void rail_Fence_Decrypt(const string& message) {
                 }
                 // print the result
                 cout << "Decrypt text is :  " << decrypted_text << endl ;
-                break;
             }
-            else {
-                continue;
-            }
-        }
-        else {
-            continue;
-        }
-     }
 }
-
-
 int main() {
     string message, encrypted;
     cout << "Ahlan ya user ya habibi." << endl;
@@ -668,7 +649,7 @@ int main() {
                     break;
                 }
                 else if (cipher_choice == "3"){ // For the rail-fence cipher decryption.
-                    rail_Fence_Decrypt(message);
+                    rail_Fence_Decrypt(encrypted);
                     break;
                 }
                 else{
