@@ -1,7 +1,7 @@
 /*
 FCAI - Structured Programming - 2024 - Assignment 2
 Program Name:
-program Description: This program is a simple encryption and decryption program using three sipmle ciphers.
+program Description: This program is a simple encryption and decryption program using three simple ciphers.
 Last Modification Date: 9/3/2024.
 Author1: Zeyad Mohamed Arafat   20230161   s21
 Author2: Youssef Ahmed Beshir   20230476   s21
@@ -21,30 +21,31 @@ Rail fence Cipher --------------------> John Ayman Demian
 using namespace std;
 
 
-int get_valid_key(){ // to make sure that the secret key of the route cipher is valid.
-    int secret_key;
-    cout << "please enter the secret key: ";
-    while ( !(cin >> secret_key) || secret_key <= 0 ){
-        cout << "please enter a valid key(valid keys are integers bigger than 0)" << endl;
+int route_key_validity(){ // to make sure that the secret key of the route cipher is valid.
+    int secretKey;
+    cout << "Please enter the secret key: ";
+    while (!(cin >> secretKey) || secretKey <= 0 ){
+        cout << "Please enter a valid key (valid keys are integers bigger than 0)." << endl;
         cin.clear();
         cin.ignore();
     }
-    return secret_key;
+    return secretKey;
 }
 
 
-string strip(string sentece){ // to remove the spaces in the text in the route cipher encryption .
-    string stripped_sentence;
-    for(int i = 0; i < sentece.length(); i++){
-        if(sentece[i] != ' '){
-            stripped_sentence += sentece[i];
+string strip(string sentence){ // to remove the spaces in the text in the route cipher encryption .
+    string strippedSentence;
+    for(int i = 0; i < sentence.length(); i++){
+        if(sentence[i] != ' '){
+            strippedSentence += sentence[i];
         }
     }
-    return stripped_sentence;
+    return strippedSentence;
 }
 
 
-bool keyValidity (const string& key){
+bool poly_key_validity (const string& key){
+    // Checking the validity of the cipher key and handling possible errors.
     int number;
     string ch;
 
@@ -60,7 +61,6 @@ bool keyValidity (const string& key){
             cout << "->";
             return false;
         }
-
     }
 
     for (auto i : key) {
@@ -71,7 +71,6 @@ bool keyValidity (const string& key){
             cout << "->";
             return false;
         }
-
     }
 
     for (int i = 0; i < 4; ++i) {
@@ -81,33 +80,31 @@ bool keyValidity (const string& key){
                 cout << "->";
                 return false;
             }
-
         }
     }
-
     return true;
 }
 
 
 void polybius_square_encryption(const string& message){
     // App data
-    string poly[6][6] = {{" ", "", "", "", "", ""},
-                         {"", "A", "B", "C", "D", "E"},
-                         {"", "F", "G", "H", "I", "K"},
-                         {"", "L", "M", "N", "O", "P"},
-                         {"", "Q", "R", "S", "T", "U"},
-                         {"", "V", "W", "X", "Y", "Z"}};
+    char poly[6][6] = {{' ', ' ', ' ', ' ', ' ', ' '},
+                       {' ', 'A', 'B', 'C', 'D', 'E'},
+                       {' ', 'F', 'G', 'H', 'I', 'K'},
+                       {' ', 'L', 'M', 'N', 'O', 'P'},
+                       {' ', 'Q', 'R', 'S', 'T', 'U'},
+                       {' ', 'V', 'W', 'X', 'Y', 'Z'}};
 
     string keyInput;
     cout << "Enter the key: " << endl;
     cout << "->";
     cin >> keyInput;
 
-    while (! keyValidity(keyInput)){
+    while (!poly_key_validity(keyInput)){
         cin >> keyInput;
     }
 
-    // assigning keyInput to the poly square
+    // Assigning keyInput to the poly square
     string key = " ";
     key += keyInput;
 
@@ -119,30 +116,26 @@ void polybius_square_encryption(const string& message){
     string encrypted;
     encrypted = "";
 
+    // Main cipher loop.
     for (auto ch : message){
-        if (ispunct(ch) || isspace(ch)){
+        if (not isalpha(ch)){
             encrypted += ch;
         }
         for (int i = 1; i < 6; ++i) {
             for (int j = 1; j < 6; ++j) {
-                string letter;
-                ch = toupper(ch);
-                letter = ch;
-
-                if (letter == poly[i][j]){
+                if (toupper(ch) == poly[i][j]){
                     encrypted += poly[i][0];
                     encrypted += poly[0][j];
-
                 }
             }
         }
     }
-
     cout << "Encrypted message -> " <<encrypted << endl << endl;
 }
 
 
-bool poly_decrypted_validity(string encrypted){
+bool poly_decrypted_validity(string & encrypted){
+    // Checking the validity of the decrypted message.
     for (auto i : encrypted){
         if (isalpha(i)){
             cout << "Invalid message. Encrypted messages should be digits only, try again." << endl;
@@ -151,8 +144,28 @@ bool poly_decrypted_validity(string encrypted){
         }
     }
 
-    if (encrypted.length() % 2 != 0){
-        cout << "Invalid message." << endl;
+    string cleanEncrypted;
+    for (auto i: encrypted) {
+        if (!isdigit(i)) {
+            continue;
+        }
+        else {
+            cleanEncrypted += i;
+        }
+    }
+
+    for (auto i : cleanEncrypted){
+        string ch;
+        ch = i;
+        if (stoi (ch) > 5 || stoi(ch) == 0){
+            cout << "Message should have numbers [1 -> 5] only, try again." << endl;
+            cout << "->";
+            return false;
+        }
+    }
+
+    if (cleanEncrypted.length() % 2 != 0){
+        cout << "Invalid message. Try again." << endl;
         cout << "->";
         return false;
     }
@@ -160,7 +173,8 @@ bool poly_decrypted_validity(string encrypted){
 }
 
 
-void polybius_square_decryption(string encrypted) {
+void polybius_square_decryption(string &encrypted) {
+    // App data
     string poly[6][6] = {{" ", "",  "",  "",  "",  ""},
                          {"",  "A", "B", "C", "D", "E"},
                          {"",  "F", "G", "H", "I", "K"},
@@ -168,28 +182,9 @@ void polybius_square_decryption(string encrypted) {
                          {"",  "Q", "R", "S", "T", "U"},
                          {"",  "V", "W", "X", "Y", "Z"}};
 
-    string cleanEncrypted = "";
-    for (auto i: encrypted) {
-        if (!isdigit(i)) {
-
-        }
-        else {
-            cleanEncrypted += i;
-        }
-    }
-
-
-    while(!poly_decrypted_validity(cleanEncrypted)){
+    while (!poly_decrypted_validity(encrypted)){
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
         getline(cin, encrypted);
-        cleanEncrypted = "";
-        for (auto i: encrypted) {
-            if (!isdigit(i))
-                continue;
-            else {
-                cleanEncrypted += i;
-            }
-        }
     }
 
     cout << "Enter the key." << endl;
@@ -197,13 +192,13 @@ void polybius_square_decryption(string encrypted) {
     string keyInput;
     cin >> keyInput;
 
-    while (!keyValidity(keyInput)) {
+    while (!poly_key_validity(keyInput)) {
         cout << "Enter the key." << endl;
         cout << "->";
         cin >> keyInput;
     }
 
-    // assigning keyInput to the poly square
+    // Assigning the cipher key to the poly square.
     string key = " ";
     key += keyInput;
 
@@ -212,7 +207,7 @@ void polybius_square_decryption(string encrypted) {
         poly[i][0] = key[i];
     }
 
-    // assign each letter to its index according to the key.
+    // Assign each letter to its index according to the key.
     map<vector<string>, string> alphaKeys;
 
     for (int i = 1; i < 6; ++i) {
@@ -221,172 +216,194 @@ void polybius_square_decryption(string encrypted) {
         }
     }
 
-    string decrypted = "";
-    for (int i = 0; i < cleanEncrypted.length(); ) {
-        for (int j = i + 1; j < cleanEncrypted.length(); j += 2) {
+    string decrypted;
+    for (int i = 0; i < encrypted.length();) {
+        if (i == encrypted.length() - 1){
+            decrypted += encrypted[i];
+            break;
+        }
+        for (int j = i + 1; j < encrypted.length(); j += 2) {
             string row, column;
-            row = cleanEncrypted[i];
-            column = cleanEncrypted[j];
-            decrypted += alphaKeys[{row, column}];
-            i += 2;
+            row = encrypted[i];
+            column = encrypted[j];
+            if (!isdigit(encrypted[i])){
+                decrypted += encrypted[i];
+                i ++;
+                j --;
+            }
+
+            else{
+                decrypted += alphaKeys[{row, column}];
+                i += 2;
+            }
         }
     }
 
-    cout << decrypted << endl;
-
+    cout << "Decrypted message --> "<< decrypted << endl;
 }
 
 
 void route_cipher_encryption(string sentence_to_encrypt){
 
-    // explian to the user what he needs to do in order to encrypt the text.
+    // Explain to the user what he needs to do in order to encrypt the text.
     cout << "welcome to the route cipher encryption in order to encrypt some text you need to choose a secret key" << endl << endl;
 
-    int secret_key = get_valid_key(); // getting the secret key and checking it's validity.
-    int character_counter = 0; // this counter will help create the matrix of the cipher.
-    string stripped_sentence = strip(sentence_to_encrypt); // stripping the text from any spaces.
-    int number_of_rows = ceil(static_cast<float>(stripped_sentence.length()) / static_cast<float>(secret_key));// calculating the number of rows in the matrix.
-    string cipher_matrix[number_of_rows][secret_key];
+    int secretKey = route_key_validity();            // getting the secret key and checking its validity.
+
+    int characterCounter = 0;                        // this counter will help create the matrix of the cipher.
+    // stripping the text from any spaces.
+    string strippedSentence = strip(sentence_to_encrypt);
+
+    // calculating the number of rows in the matrix.
+    int nRows = ceil(static_cast<float>(strippedSentence.length()) / static_cast<float>(secretKey));
+    string cipherMatrix[nRows][secretKey];
+
     // filling the matrix with the character of the text.
-    for(int i = 0; i < number_of_rows; i++){
-        for (int j = 0; j < secret_key; j++){
-            if(character_counter < stripped_sentence.length()){
-                cipher_matrix[i][j] = stripped_sentence[character_counter];
-                character_counter++;
+    for(int i = 0; i < nRows; i++){
+        for (int j = 0; j < secretKey; j++){
+            if(characterCounter < strippedSentence.length()){
+                cipherMatrix[i][j] = strippedSentence[characterCounter];
+                characterCounter++;
             }
             // filling the rest of the matrix with x's.
             else {
-                cipher_matrix[i][j] = "x";
+                cipherMatrix[i][j] = "x";
             }
-
         }
     }
 
     // the rest of the function is for the spiral iteration.
-    // there is a pattern in the iteration, you go down then left then up then right and repeat, all inside the 2d array(matrix).
-    int direction = 0; // creating a direction variable to switch between directions.
+    // there is a pattern in the iteration, you go down then left then up then right and repeat,
+    // all inside the 2d array(matrix).
+    int direction = 0;          // creating a direction variable to switch between directions.
+
     // four variables to indicate the start from each direction.
-    int start_down = number_of_rows-1;
-    int start_up = 0;
-    int start_right = secret_key-1;
-    int start_left = 0;
-    string encrypted_sentence;
-    int counter = 0; // the counter to stop the spiral iteration when done.
-    while(counter < secret_key*number_of_rows){
+    int startDown = nRows - 1;
+    int startUp = 0;
+    int startRight = secretKey - 1;
+    int startLeft = 0;
+
+    string encryptedSentence;
+    int counter = 0;            // the counter to stop the spiral iteration when done.
+
+    while(counter < secretKey * nRows){
         if(direction == 0){ // direction 0 means going down in the matrix.
-        // the start point is the top right corner [start_up][start_right].
-        // while going down we are moving in the most right column (start_right) and change the row index from 0(start_up) to (start_down).
-            for (int i = start_up; i <= start_down; i++){
-                encrypted_sentence += cipher_matrix[i][start_right];
+        // the start point is the top right corner [startUp][startRight].
+        // while going down we are moving in the most right column (startRight)
+        // and change the row index from 0(startUp) to (startDown).
+            for (int i = startUp; i <= startDown; i++){
+                encryptedSentence += cipherMatrix[i][startRight];
                 counter++; // increasing the counter to stop the while loop.
             }
-            start_right--; // changing the start_right value so we don't get the same column when going down again.
+            startRight--; // changing the startRight value, so we don't get the same column when going down again.
             direction = 1; // changing the direction as planned in the iteration pattern.
         }
         // all the other loops work with the same logic.
 
-
-        else if (direction == 1){ // direction 1 means going left in the matrix.
-            for (int i = start_right; i >= start_left; i--){
-                encrypted_sentence += cipher_matrix[start_down][i];
+        else if (direction == 1){       // direction 1 means going left in the matrix.
+            for (int i = startRight; i >= startLeft; i--){
+                encryptedSentence += cipherMatrix[startDown][i];
                 counter++;
             }
-            start_down--;
+            startDown--;
             direction = 2;
         }
 
-
-        else if (direction == 2){ // direction 2 means going up in the matrix.
-            for (int i = start_down; i >= start_up; i--){
-                encrypted_sentence += cipher_matrix[i][start_left];
+        else if (direction == 2){       // direction 2 means going up in the matrix.
+            for (int i = startDown; i >= startUp; i--){
+                encryptedSentence += cipherMatrix[i][startLeft];
                 counter++;
             }
-            start_left++;
+            startLeft++;
             direction = 3;
         }
 
-
-        else if (direction == 3){ // direction 3 means going right in the matrix.
-            for (int i = start_left; i <= start_right; i++){
-                encrypted_sentence += cipher_matrix[start_up][i];
+        else if (direction == 3){       // direction 3 means going right in the matrix.
+            for (int i = startLeft; i <= startRight; i++){
+                encryptedSentence += cipherMatrix[startUp][i];
                 counter++;
             }
-            start_up++;
+            startUp++;
             direction = 0;
         }
     }
 
-    cout << encrypted_sentence << endl << endl; // printing the encrypted text.
+    cout << encryptedSentence << endl << endl; // printing the encrypted text.
 
 }
 
 
 void route_cipher_decryption(string encrypted_sentence){
 
-    // explian to the user what he needs to do in order to decrypt the text.
+    // Explain to the user what he needs to do in order to decrypt the text.
     cout << "welcome to the route cipher decryption in order to decrypt some text you need to enter the secret key" << endl << endl;
 
 
-    int secret_key = get_valid_key(); // getting the secret key and checking it's validity.
-    string stripped_sentence = strip(encrypted_sentence);// stripping the text from any spaces.
-    int number_of_rows = ceil(static_cast<float>(stripped_sentence.length()) / static_cast<float>(secret_key));// calculating the number of rows in the matrix.
-    string cipher_matrix[number_of_rows][secret_key];
+    int secretKey = route_key_validity();       // getting the secret key and checking its validity.
+    string strippedSentence = strip(encrypted_sentence);    // stripping the text from any spaces.
+
+    // calculating the number of rows in the matrix.
+    int nRows = ceil(static_cast<float>(strippedSentence.length()) / static_cast<float>(secretKey));
+    string cipherMatrix[nRows][secretKey];
     int direction = 0;// creating a direction variable to switch between directions.
+
     // four variables to indicate the start from each direction.
-    int start_down = number_of_rows-1;
-    int start_up = 0;
-    int start_right = secret_key-1;
-    int start_left = 0;
+    int startDown = nRows - 1;
+    int startUp = 0;
+    int startRight = secretKey - 1;
+    int startLeft = 0;
+
     string decrypted_sentence;
     int counter = 0;
 
     // filling the matrix with the character of the text in a spiral way.
-    while(counter < secret_key*number_of_rows){
-        // the start point is the top right corner [start_up][start_right].
-        // while going down we are moving in the most right column (start_right) and change the row index from 0(start_up) to (start_down).
+    while(counter < secretKey * nRows){
+        // the start point is the top right corner [startUp][startRight].
+        // while going down we are moving in the most right column (startRight)
+        // and change the row index from 0(startUp) to (startDown).
         if(direction == 0){
-            for (int i = start_up; i <= start_down; i++){
-                cipher_matrix[i][start_right] = stripped_sentence[counter]; // adding the characters of the text to the matrix.
+            for (int i = startUp; i <= startDown; i++){
+                cipherMatrix[i][startRight] = strippedSentence[counter]; // adding the characters of the text to the matrix.
                 counter++; // increasing the counter to stop the while loop.
             }
-            start_right--; // changing the start_right value so we don't get the same column when going down again.
+            startRight--; // changing the startRight value, so we don't get the same column when going down again.
             direction = 1; // changing the direction as planned in the iteration pattern.
         }
         // all the other loops work with the same logic.
 
 
         else if (direction == 1){ // direction 1 means going left in the matrix.
-            for (int i = start_right; i >= start_left; i--){
-                cipher_matrix[start_down][i] = stripped_sentence[counter];
+            for (int i = startRight; i >= startLeft; i--){
+                cipherMatrix[startDown][i] = strippedSentence[counter];
                 counter++;
             }
-            start_down--;
+            startDown--;
             direction = 2;
         }
 
         else if (direction == 2){ // direction 2 means going up in the matrix.
-            for (int i = start_down; i >= start_up; i--){
-                cipher_matrix[i][start_left] = stripped_sentence[counter];
+            for (int i = startDown; i >= startUp; i--){
+                cipherMatrix[i][startLeft] = strippedSentence[counter];
                 counter++;
             }
-            start_left++;
+            startLeft++;
             direction = 3;
         }
 
         else if (direction == 3){ // direction 3 means going right in the matrix.
-            for (int i = start_left; i <= start_right; i++){
-                cipher_matrix[start_up][i] = stripped_sentence[counter];
+            for (int i = startLeft; i <= startRight; i++){
+                cipherMatrix[startUp][i] = strippedSentence[counter];
                 counter++;
             }
-            start_up++;
+            startUp++;
             direction = 0;
         }
     }
 
     // reading the characters in the matrix in the right order.
-    for (int i = 0; i < number_of_rows; i++){
-        for (int j = 0; j < secret_key; j++){
-            decrypted_sentence += cipher_matrix[i][j]; // adding characters to the decrypted sentence
+    for (int i = 0; i < nRows; i++){
+        for (int j = 0; j < secretKey; j++){
+            decrypted_sentence += cipherMatrix[i][j]; // adding characters to the decrypted sentence
         }
     }
     cout << decrypted_sentence << endl << endl; // printing the decrypted text
@@ -395,22 +412,24 @@ void route_cipher_decryption(string encrypted_sentence){
 
 void rail_Fence_Encrypt(const string& message) {
     // set main variables
-    string text = message, key, encrypted_text;
+    string text = message, key, encryptedText;
     int num;
 
     // print welcome message
     cout << "welcome to Rail Fence encrypt program " << endl;
+
         // let user select the key
         cout << "please choose the key 3 or 4 :  " ;
         cin.ignore();
         getline(cin , key ) ;
+
         //check validation of key
         while (key != "3" && key != "4") {
         cout << "Invalid key. Please choose the key 3 or 4: ";
         getline(cin, key);
             }
             num = stoi(key);
-            if( num == 3 ) {
+            if (num == 3) {
                 // make 3 lists
                 vector <char> list1 , list2 , list3;
                 // make first list to collect the first row by adding 4 each loop
@@ -499,14 +518,16 @@ void rail_Fence_Encrypt(const string& message) {
 
 void rail_Fence_Decrypt(const string& message) {
     // set main variables
-    string text = message, key, decrypted_text;
+    string text = message, key, decryptedText;
     int num;
+
     // print welcome message
     cout << "welcome to Rail Fence encrypt program " << endl;
         // let user choose the key
         cout << "please choose the key 3 or 4 :  " ;
         cin.ignore();
         getline(cin , key ) ;
+
         while (key != "3" && key != "4") {
             cout << "Invalid key. Please choose the key 3 or 4: ";
             getline(cin, key);
@@ -515,7 +536,7 @@ void rail_Fence_Decrypt(const string& message) {
             if(num == 3 ) {
                 int len = text.length();
                 // set decrypt text with len = len of clear text
-                decrypted_text.resize(len);
+                decryptedText.resize(len);
                 int pos = 0;
                 //make for loop to iterates in the text
                 for (int i = 0; i < 3 ; ++i) {
@@ -523,7 +544,7 @@ void rail_Fence_Decrypt(const string& message) {
                     // put flag
                     bool down = true;
                     while (index < len) {
-                        decrypted_text[index] = text[pos++];
+                        decryptedText[index] = text[pos++];
                         // when i == 0 or 2 it will take the letters from first row
                         if (i == 0 || i ==  2)
                             index += 4;
@@ -540,12 +561,12 @@ void rail_Fence_Decrypt(const string& message) {
                     }
                 }
                 // print the result
-                cout << "Decrypt text is :  " << decrypted_text << endl ;
+                cout << "Decrypt text is :  " << decryptedText << endl ;
             }
             else if (num == 4) {
                 int len = text.length();
                 // set decrypt text with len = len of clear text
-                decrypted_text.resize(len);
+                decryptedText.resize(len);
                 int pos = 0;
                 //make for loop to iterates in the text
                 for (int i = 0; i < 4 ; ++i) {
@@ -553,7 +574,7 @@ void rail_Fence_Decrypt(const string& message) {
                     // put flag
                     bool down = true;
                     while (index < len) {
-                        decrypted_text[index] = text[pos++];
+                        decryptedText[index] = text[pos++];
                         // this line when i == 0 or 3 it will take the letters from first and fourth row
                         if (i == 0 || i ==  3)
                             index += 2 * 3;
@@ -570,7 +591,7 @@ void rail_Fence_Decrypt(const string& message) {
                     }
                 }
                 // print the result
-                cout << "Decrypt text is :  " << decrypted_text << endl ;
+                cout << "Decrypt text is :  " << decryptedText << endl ;
             }
 }
 
@@ -602,32 +623,33 @@ int main() {
             getline(cin, message);
 
             cout << "Which Cipher do you like to choose?" << endl;
-            cout << "1- polybius Square cipher" << endl;
-            cout << "2- route cipher" << endl;
-            cout << "3- rail-fence cipher" << endl;
+            cout << "1- Polybius Square cipher" << endl;
+            cout << "2- Route cipher" << endl;
+            cout << "3- Rail-fence cipher" << endl;
             cout << "->";
 
-            string cipher_choice;
-            cin >> cipher_choice;
+            string cipherChoice;
+            cin >> cipherChoice;
 
             while(true){
-                if (cipher_choice == "1"){ // for the polybius square cipher encryption.
+                if (cipherChoice == "1"){           // for the polybius square cipher encryption.
                     polybius_square_encryption(message);
                     break;
                 }
 
-                else if (cipher_choice == "2"){
+                else if (cipherChoice == "2"){      // for the route cipher encryption.
                     route_cipher_encryption(message);
                     break;
                 }
 
-                else if (cipher_choice == "3"){     // For the rail-fence cipher encryption.
+                else if (cipherChoice == "3"){      // For the rail-fence cipher encryption.
                     rail_Fence_Encrypt(message);
                     break;
                 }
 
                 else{
-                    cout << "please enter a valid choice" << endl;
+                    cout << "Please enter a valid choice" << endl;
+                    break;
                 }
             }
         }
@@ -640,32 +662,36 @@ int main() {
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
             getline(cin, encrypted);
 
-            cout << "what cipher would you like to use?" << endl;
-            cout << "1- polybius Square cipher" << endl;
-            cout << "2- route cipher" << endl;
-            cout << "3- rail-fence cipher" << endl;
+            cout << "What cipher would you like to use?" << endl;
+            cout << "1- Polybius Square cipher" << endl;
+            cout << "2- Route cipher" << endl;
+            cout << "3- Rail-fence cipher" << endl;
             cout << "->";
 
             string cipher_choice;
             cin >> cipher_choice;
 
             while(true){
-                if (cipher_choice == "1"){ // for the polybius square cipher decryption.
+                if (cipher_choice == "1"){              // for the polybius square cipher decryption.
                     polybius_square_decryption(encrypted);
                     break;
                 }
-                else if (cipher_choice == "2"){
+                else if (cipher_choice == "2"){         // for the route cipher decryption.
                     route_cipher_decryption(encrypted);
                     break;
                 }
-                else if (cipher_choice == "3"){ // For the rail-fence cipher decryption.
+                else if (cipher_choice == "3"){         // For the rail-fence cipher decryption.
                     rail_Fence_Decrypt(encrypted);
                     break;
                 }
                 else{
-                    cout << "please enter a valid choice" << endl;
+                    cout << "Please enter a valid choice" << endl;
+                    break;
                 }
             }
+        }
+        else{
+            cout << "Invalid choice." << endl;
         }
     }
 }
