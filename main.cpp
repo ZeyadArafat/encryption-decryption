@@ -3,12 +3,11 @@
 using namespace std;
 
 
-int route_key_validity(){
-    // To make sure that the secret key of the route cipher is valid.
+int get_valid_key(){ // to make sure that the secret key of the route cipher is valid.
     int secret_key;
-    cout << "Please enter the secret key: ";
+    cout << "please enter the secret key: ";
     while ( !(cin >> secret_key) || secret_key <= 0 ){
-        cout << "Please enter a valid key (valid keys are integers bigger than 0)" << endl;
+        cout << "please enter a valid key(valid keys are integers bigger than 0)" << endl;
         cin.clear();
         cin.ignore();
     }
@@ -16,20 +15,18 @@ int route_key_validity(){
 }
 
 
-string strip(string sentence){
-    // To remove the spaces in the text in the route cipher encryption .
+string strip(string sentece){ // to remove the spaces in the text in the route cipher encryption .
     string stripped_sentence;
-    for(int i = 0; i < sentence.length(); i++){
-        if(sentence[i] != ' '){
-            stripped_sentence += sentence[i];
+    for(int i = 0; i < sentece.length(); i++){
+        if(sentece[i] != ' '){
+            stripped_sentence += sentece[i];
         }
     }
     return stripped_sentence;
 }
 
 
-bool poly_key_validity (const string& key){
-    // Checking the validity of the cipher key and handling possible errors.
+bool keyValidity (const string& key){
     int number;
     string ch;
 
@@ -45,6 +42,7 @@ bool poly_key_validity (const string& key){
             cout << "->";
             return false;
         }
+
     }
 
     for (auto i : key) {
@@ -55,6 +53,7 @@ bool poly_key_validity (const string& key){
             cout << "->";
             return false;
         }
+
     }
 
     for (int i = 0; i < 4; ++i) {
@@ -64,31 +63,33 @@ bool poly_key_validity (const string& key){
                 cout << "->";
                 return false;
             }
+
         }
     }
+
     return true;
 }
 
 
 void polybius_square_encryption(const string& message){
     // App data
-    char poly[6][6] = {{' ', ' ', ' ', ' ', ' ', ' '},
-                         {' ', 'A', 'B', 'C', 'D', 'E'},
-                         {' ', 'F', 'G', 'H', 'I', 'K'},
-                         {' ', 'L', 'M', 'N', 'O', 'P'},
-                         {' ', 'Q', 'R', 'S', 'T', 'U'},
-                         {' ', 'V', 'W', 'X', 'Y', 'Z'}};
+    string poly[6][6] = {{" ", "", "", "", "", ""},
+                         {"", "A", "B", "C", "D", "E"},
+                         {"", "F", "G", "H", "I", "K"},
+                         {"", "L", "M", "N", "O", "P"},
+                         {"", "Q", "R", "S", "T", "U"},
+                         {"", "V", "W", "X", "Y", "Z"}};
 
     string keyInput;
     cout << "Enter the key: " << endl;
     cout << "->";
     cin >> keyInput;
 
-    while (!poly_key_validity(keyInput)){
+    while (! keyValidity(keyInput)){
         cin >> keyInput;
     }
 
-    // Assigning keyInput to the poly square
+    // assigning keyInput to the poly square
     string key = " ";
     key += keyInput;
 
@@ -100,26 +101,30 @@ void polybius_square_encryption(const string& message){
     string encrypted;
     encrypted = "";
 
-    // Main cipher loop.
     for (auto ch : message){
-        if (not isalpha(ch)){
+        if (ispunct(ch) || isspace(ch)){
             encrypted += ch;
         }
         for (int i = 1; i < 6; ++i) {
             for (int j = 1; j < 6; ++j) {
-                if (toupper(ch) == poly[i][j]){
+                string letter;
+                ch = toupper(ch);
+                letter = ch;
+
+                if (letter == poly[i][j]){
                     encrypted += poly[i][0];
                     encrypted += poly[0][j];
+
                 }
             }
         }
     }
+
     cout << "Encrypted message -> " <<encrypted << endl << endl;
 }
 
 
-bool poly_decrypted_validity(string & encrypted){
-    // Checking the validity of the decrypted message.
+bool poly_decrypted_validity(string encrypted){
     for (auto i : encrypted){
         if (isalpha(i)){
             cout << "Invalid message. Encrypted messages should be digits only, try again." << endl;
@@ -128,28 +133,8 @@ bool poly_decrypted_validity(string & encrypted){
         }
     }
 
-    string cleanEncrypted;
-    for (auto i: encrypted) {
-        if (!isdigit(i)) {
-            continue;
-        }
-        else {
-            cleanEncrypted += i;
-        }
-    }
-
-    for (auto i : cleanEncrypted){
-        string ch;
-        ch = i;
-        if (stoi (ch) > 5 || stoi(ch) == 0){
-            cout << "Message should have numbers [1 -> 5] only, try again." << endl;
-            cout << "->";
-            return false;
-        }
-    }
-
-    if (cleanEncrypted.length() % 2 != 0){
-        cout << "Invalid message. Try again." << endl;
+    if (encrypted.length() % 2 != 0){
+        cout << "Invalid message." << endl;
         cout << "->";
         return false;
     }
@@ -157,8 +142,7 @@ bool poly_decrypted_validity(string & encrypted){
 }
 
 
-void polybius_square_decryption(string &encrypted) {
-    // App data
+void polybius_square_decryption(string encrypted) {
     string poly[6][6] = {{" ", "",  "",  "",  "",  ""},
                          {"",  "A", "B", "C", "D", "E"},
                          {"",  "F", "G", "H", "I", "K"},
@@ -166,9 +150,28 @@ void polybius_square_decryption(string &encrypted) {
                          {"",  "Q", "R", "S", "T", "U"},
                          {"",  "V", "W", "X", "Y", "Z"}};
 
-    while (!poly_decrypted_validity(encrypted)){
+    string cleanEncrypted = "";
+    for (auto i: encrypted) {
+        if (!isdigit(i)) {
+
+        }
+        else {
+            cleanEncrypted += i;
+        }
+    }
+
+
+    while(!poly_decrypted_validity(cleanEncrypted)){
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
         getline(cin, encrypted);
+        cleanEncrypted = "";
+        for (auto i: encrypted) {
+            if (!isdigit(i))
+                continue;
+            else {
+                cleanEncrypted += i;
+            }
+        }
     }
 
     cout << "Enter the key." << endl;
@@ -176,13 +179,13 @@ void polybius_square_decryption(string &encrypted) {
     string keyInput;
     cin >> keyInput;
 
-    while (!poly_key_validity(keyInput)) {
+    while (!keyValidity(keyInput)) {
         cout << "Enter the key." << endl;
         cout << "->";
         cin >> keyInput;
     }
 
-    // Assigning the cipher key to the poly square.
+    // assigning keyInput to the poly square
     string key = " ";
     key += keyInput;
 
@@ -191,7 +194,7 @@ void polybius_square_decryption(string &encrypted) {
         poly[i][0] = key[i];
     }
 
-    // Assign each letter to its index according to the key.
+    // assign each letter to its index according to the key.
     map<vector<string>, string> alphaKeys;
 
     for (int i = 1; i < 6; ++i) {
@@ -200,55 +203,44 @@ void polybius_square_decryption(string &encrypted) {
         }
     }
 
-    string decrypted;
-    for (int i = 0; i < encrypted.length();) {
-        if (i == encrypted.length() - 1){
-            decrypted += encrypted[i];
-            break;
-        }
-        for (int j = i + 1; j < encrypted.length(); j += 2) {
+    string decrypted = "";
+    for (int i = 0; i < cleanEncrypted.length(); ) {
+        for (int j = i + 1; j < cleanEncrypted.length(); j += 2) {
             string row, column;
-            row = encrypted[i];
-            column = encrypted[j];
-            if (!isdigit(encrypted[i])){
-                decrypted += encrypted[i];
-                i ++;
-                j --;
-            }
-
-            else{
-                decrypted += alphaKeys[{row, column}];
-                i += 2;
-            }
+            row = cleanEncrypted[i];
+            column = cleanEncrypted[j];
+            decrypted += alphaKeys[{row, column}];
+            i += 2;
         }
     }
 
-    cout << "Decrypted message --> "<< decrypted << endl;
+    cout << decrypted << endl;
+
 }
 
 
 void route_cipher_encryption(string sentence_to_encrypt){
 
-    // Explain to the user what he needs to do in order to encrypt the text.
-    cout << "Welcome to the route cipher encryption in order to encrypt some text you need to choose a secret key" << endl << endl;
+    // explian to the user what he needs to do in order to encrypt the text.
+    cout << "welcome to the route cipher encryption in order to encrypt some text you need to choose a secret key" << endl << endl;
 
-    int secret_key = route_key_validity(); // Getting the secret key and checking its validity.
-    int character_counter = 0; // This counter will help create the matrix of the cipher.
-    string stripped_sentence = strip(sentence_to_encrypt); // Stripping the text from any spaces.
-    int number_of_rows = ceil(static_cast<float>(stripped_sentence.length()) / static_cast<float>(secret_key));// Calculating the number of rows in the matrix.
+    int secret_key = get_valid_key(); // getting the secret key and checking it's validity.
+    int character_counter = 0; // this counter will help create the matrix of the cipher.
+    string stripped_sentence = strip(sentence_to_encrypt); // stripping the text from any spaces.
+    int number_of_rows = ceil(static_cast<float>(stripped_sentence.length()) / static_cast<float>(secret_key));// calculating the number of rows in the matrix.
     string cipher_matrix[number_of_rows][secret_key];
-
-    // Filling the matrix with the character of the text.
+    // filling the matrix with the character of the text.
     for(int i = 0; i < number_of_rows; i++){
         for (int j = 0; j < secret_key; j++){
             if(character_counter < stripped_sentence.length()){
                 cipher_matrix[i][j] = stripped_sentence[character_counter];
                 character_counter++;
             }
-            // Filling the rest of the matrix with x's.
+            // filling the rest of the matrix with x's.
             else {
                 cipher_matrix[i][j] = "x";
             }
+
         }
     }
 
@@ -264,16 +256,16 @@ void route_cipher_encryption(string sentence_to_encrypt){
     int counter = 0; // the counter to stop the spiral iteration when done.
     while(counter < secret_key*number_of_rows){
         if(direction == 0){ // direction 0 means going down in the matrix.
-            // the start point is the top right corner [start_up][start_right].
-            // while going down we are moving in the most right column (start_right) and change the row index from 0(start_up) to (start_down).
+        // the start point is the top right corner [start_up][start_right].
+        // while going down we are moving in the most right column (start_right) and change the row index from 0(start_up) to (start_down).
             for (int i = start_up; i <= start_down; i++){
                 encrypted_sentence += cipher_matrix[i][start_right];
                 counter++; // increasing the counter to stop the while loop.
             }
-            start_right--; // changing the start_right value, so we don't get the same column when going down again.
+            start_right--; // changing the start_right value so we don't get the same column when going down again.
             direction = 1; // changing the direction as planned in the iteration pattern.
         }
-            // all the other loops work with the same logic.
+        // all the other loops work with the same logic.
 
 
         else if (direction == 1){ // direction 1 means going left in the matrix.
@@ -306,18 +298,18 @@ void route_cipher_encryption(string sentence_to_encrypt){
         }
     }
 
-    cout << "Encrypted --> " << encrypted_sentence << endl << endl; // printing the encrypted text.
+    cout << encrypted_sentence << endl << endl; // printing the encrypted text.
 
 }
 
 
 void route_cipher_decryption(string encrypted_sentence){
 
-    // Explain to the user what he needs to do in order to decrypt the text.
+    // explian to the user what he needs to do in order to decrypt the text.
     cout << "welcome to the route cipher decryption in order to decrypt some text you need to enter the secret key" << endl << endl;
 
 
-    int secret_key = route_key_validity(); // getting the secret key and checking its validity.
+    int secret_key = get_valid_key(); // getting the secret key and checking it's validity.
     string stripped_sentence = strip(encrypted_sentence);// stripping the text from any spaces.
     int number_of_rows = ceil(static_cast<float>(stripped_sentence.length()) / static_cast<float>(secret_key));// calculating the number of rows in the matrix.
     string cipher_matrix[number_of_rows][secret_key];
@@ -339,10 +331,10 @@ void route_cipher_decryption(string encrypted_sentence){
                 cipher_matrix[i][start_right] = stripped_sentence[counter]; // adding the characters of the text to the matrix.
                 counter++; // increasing the counter to stop the while loop.
             }
-            start_right--; // changing the start_right value, so we don't get the same column when going down again.
+            start_right--; // changing the start_right value so we don't get the same column when going down again.
             direction = 1; // changing the direction as planned in the iteration pattern.
         }
-            // all the other loops work with the same logic.
+        // all the other loops work with the same logic.
 
 
         else if (direction == 1){ // direction 1 means going left in the matrix.
@@ -379,7 +371,7 @@ void route_cipher_decryption(string encrypted_sentence){
             decrypted_sentence += cipher_matrix[i][j]; // adding characters to the decrypted sentence
         }
     }
-    cout << "Decrypted --> " <<decrypted_sentence << endl << endl; // printing the decrypted text
+    cout << decrypted_sentence << endl << endl; // printing the decrypted text
 }
 
 
@@ -419,24 +411,23 @@ int main() {
             cin >> cipher_choice;
 
             while(true){
-                if (cipher_choice == "1"){          // For the polybius square cipher encryption.
+                if (cipher_choice == "1"){ // for the polybius square cipher encryption.
                     polybius_square_encryption(message);
                     break;
                 }
 
-                else if (cipher_choice == "2"){     // For the route cipher encryption.
+                else if (cipher_choice == "2"){
                     route_cipher_encryption(message);
                     break;
                 }
 
-                else if (cipher_choice == "3"){     // For the rail-fence cipher encryption.
+                else if (cipher_choice == "3"){ // for the rail-fence cipher.
 
                     break;
                 }
 
                 else{
                     cout << "please enter a valid choice" << endl;
-                    break;
                 }
             }
         }
@@ -459,21 +450,20 @@ int main() {
             cin >> cipher_choice;
 
             while(true){
-                if (cipher_choice == "1"){      // For the polybius square cipher decryption.
+                if (cipher_choice == "1"){ // for the polybius square cipher decryption.
                     polybius_square_decryption(encrypted);
                     break;
                 }
-                else if (cipher_choice == "2"){ // For the route cipher decryption.
+                else if (cipher_choice == "2"){
                     route_cipher_decryption(encrypted);
                     break;
                 }
-                else if (cipher_choice == "3"){ // For the rail-fence cipher decryption.
+                else if (cipher_choice == "3"){ // for the rail-fence cipher decryption.
 
                     break;
                 }
                 else{
-                    cout << "Please enter a valid choice" << endl;
-                    break;
+                    cout << "please enter a valid choice" << endl;
                 }
             }
         }
