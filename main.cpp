@@ -1,4 +1,16 @@
-/**/
+/*
+FCAI - Structured Programming - 2024 - Assignment 2
+Program Name:
+program Description: This program is a simple encryption and decryption program using three sipmle ciphers.
+Last Modification Date: 9/3/2024.
+Author1: Zeyad Mohamed Arafat   20230161   s21
+Author2: Youssef Ahmed Beshir   20230476   s21
+Author3: John Ayman Demian      20230109   s21
+Teaching Assistant:
+Polybius square Cipher ---------------> Youssef Ahmed Beshir
+Route Cipher -------------------------> Zeyad Mohamed Arafat
+Rail fence Cipher --------------------> John Ayman Demian
+*/
 
 
 #include <bits/stdc++.h>
