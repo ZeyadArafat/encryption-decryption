@@ -1,12 +1,12 @@
 /*
 FCAI - Structured Programming - 2024 - Assignment 2
-Program Name:
-program Description: This program is a simple encryption and decryption program using three simple ciphers.
+Program Name: Cipher
+program Description: This program is a simple encryptedText and decryption program using three simple ciphers.
 Last Modification Date: 9/3/2024.
 Author1: Zeyad Mohamed Arafat   20230161   s21
 Author2: Youssef Ahmed Beshir   20230476   s21
 Author3: John Ayman Demian      20230109   s21
-Teaching Assistant:
+Teaching Assistant: Rana
 Polybius square Cipher ---------------> Youssef Ahmed Beshir
 Route Cipher -------------------------> Zeyad Mohamed Arafat
 Rail fence Cipher --------------------> John Ayman Demian
@@ -33,7 +33,7 @@ int route_key_validity(){ // to make sure that the secret key of the route ciphe
 }
 
 
-string strip(string sentence){ // to remove the spaces in the text in the route cipher encryption .
+string strip(string sentence){ // to remove the spaces in the text in the route cipher encryptedText .
     string strippedSentence;
     for(int i = 0; i < sentence.length(); i++){
         if(sentence[i] != ' '){
@@ -173,6 +173,26 @@ bool poly_decrypted_validity(string & encrypted){
 }
 
 
+bool simpleSub_Key_Validity(string key){
+    for (char i : key) {
+        if (!isalpha(i))return false;
+    }
+    return true;
+}
+
+
+string completeKey(string key){
+    string alpha = "abcdefghijklmnoprqstuvwxyz";
+    int letterIndex;
+    for (int i = 0; i < key.length(); ++i) {
+        letterIndex = alpha.find(key[i]);
+        alpha.erase(alpha.begin()+letterIndex);
+    }
+    key += alpha;
+    return key;
+}
+
+
 void polybius_square_decryption(string &encrypted) {
     // App data
     string poly[6][6] = {{" ", "",  "",  "",  "",  ""},
@@ -246,7 +266,7 @@ void polybius_square_decryption(string &encrypted) {
 void route_cipher_encryption(string sentence_to_encrypt){
 
     // Explain to the user what he needs to do in order to encrypt the text.
-    cout << "welcome to the route cipher encryption in order to encrypt some text you need to choose a secret key" << endl << endl;
+    cout << "welcome to the route cipher encryptedText in order to encrypt some text you need to choose a secret key" << endl << endl;
 
     int secretKey = route_key_validity();            // getting the secret key and checking its validity.
 
@@ -596,6 +616,37 @@ void rail_Fence_Decrypt(const string& message) {
 }
 
 
+void simple_sub_encryption(string textToEncrypt){
+    cout << "welcome to the simple substitution encryption, in order to get your text encrypted you need to enter a secret key" << endl;
+    cout << "the key is any sequence of alphapetic characters(maximum 25 character)" << endl;
+    string key, encryptedText = "";
+    string alpha = "abcdefghijklmnoprqstuvwxyz";
+    int decryptionIndex;
+    cout << "please enter a secret key: ";
+    cin >> key;
+    while (!(simpleSub_Key_Validity)){
+        cout << "please enter a valid key" << endl;
+        cin >> key;
+    }
+    if (simpleSub_Key_Validity(key)) {
+        if (key.length() < 25) {
+            key = completeKey(key);
+        }
+        for (int i = 0; i < textToEncrypt.length(); ++i) {
+            if (isalpha(textToEncrypt[i])){
+                decryptionIndex = alpha.find(textToEncrypt[i]);
+                encryptedText += key[decryptionIndex];
+            }
+            else{
+                encryptedText += textToEncrypt[i];
+            }
+
+        }
+    }
+    cout << encryptedText << endl;
+}
+
+
 int main() {
     string message, encrypted;
     cout << "Ahlan ya user ya habibi." << endl;
@@ -626,26 +677,33 @@ int main() {
             cout << "1- Polybius Square cipher" << endl;
             cout << "2- Route cipher" << endl;
             cout << "3- Rail-fence cipher" << endl;
+            cout << "4- simple substitution cipher" << endl;
             cout << "->";
 
             string cipherChoice;
             cin >> cipherChoice;
 
             while(true){
-                if (cipherChoice == "1"){           // for the polybius square cipher encryption.
+                if (cipherChoice == "1"){           // for the polybius square cipher encryptedText.
                     polybius_square_encryption(message);
                     break;
                 }
 
-                else if (cipherChoice == "2"){      // for the route cipher encryption.
+                else if (cipherChoice == "2"){      // for the route cipher encryptedText.
                     route_cipher_encryption(message);
                     break;
                 }
 
-                else if (cipherChoice == "3"){      // For the rail-fence cipher encryption.
+                else if (cipherChoice == "3"){      // For the rail-fence cipher encryptedText.
                     rail_Fence_Encrypt(message);
                     break;
                 }
+
+                else if (cipherChoice == "4"){
+                    simple_sub_encryption(message);
+                    break;
+                }
+
 
                 else{
                     cout << "Please enter a valid choice" << endl;
@@ -666,6 +724,7 @@ int main() {
             cout << "1- Polybius Square cipher" << endl;
             cout << "2- Route cipher" << endl;
             cout << "3- Rail-fence cipher" << endl;
+            cout << "4- simple substitution cipher" << endl;
             cout << "->";
 
             string cipher_choice;
