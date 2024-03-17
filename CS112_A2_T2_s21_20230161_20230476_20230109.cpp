@@ -621,7 +621,7 @@ void simple_sub_encryption(string textToEncrypt){
     cout << "the key is any sequence of alphapetic characters(maximum 25 character)" << endl;
     string key, encryptedText = "";
     string alpha = "abcdefghijklmnoprqstuvwxyz";
-    int decryptionIndex;
+    int encryptionIndex;
     cout << "please enter a secret key: ";
     cin >> key;
     while (!(simpleSub_Key_Validity)){
@@ -634,11 +634,42 @@ void simple_sub_encryption(string textToEncrypt){
         }
         for (int i = 0; i < textToEncrypt.length(); ++i) {
             if (isalpha(textToEncrypt[i])){
-                decryptionIndex = alpha.find(textToEncrypt[i]);
-                encryptedText += key[decryptionIndex];
+                encryptionIndex = alpha.find(textToEncrypt[i]);
+                encryptedText += key[encryptionIndex];
             }
             else{
                 encryptedText += textToEncrypt[i];
+            }
+
+        }
+    }
+    cout << encryptedText << endl;
+}
+
+
+void simple_sub_decryption(string textToDecrypt){
+    cout << "welcome to the simple substitution decryption, in order to get your text decrypted you need to enter the secret key" << endl;
+    cout << "the key is any sequence of alphapetic characters(maximum 25 character)" << endl;
+    string key, encryptedText = "";
+    string alpha = "abcdefghijklmnoprqstuvwxyz";
+    int decryptionIndex;
+    cout << "please enter the secret key: ";
+    cin >> key;
+    while (!(simpleSub_Key_Validity)){
+        cout << "please enter a valid key" << endl;
+        cin >> key;
+    }
+    if (simpleSub_Key_Validity(key)) {
+        if (key.length() < 25) {
+            key = completeKey(key);
+        }
+        for (int i = 0; i < textToDecrypt.length(); ++i) {
+            if (isalpha(textToDecrypt[i])){
+                decryptionIndex = key.find(textToDecrypt[i]);
+                encryptedText += alpha[decryptionIndex];
+            }
+            else{
+                encryptedText += textToDecrypt[i];
             }
 
         }
@@ -743,6 +774,11 @@ int main() {
                     rail_Fence_Decrypt(encrypted);
                     break;
                 }
+                else if (cipher_choice == "4"){
+                    simple_sub_decryption(encrypted);
+                    break;
+                }
+
                 else{
                     cout << "Please enter a valid choice" << endl;
                     break;
