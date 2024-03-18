@@ -51,6 +51,248 @@ string strip(string sentence){ // to remove the spaces in the text in the route 
     return strippedSentence;
 }
 
+bool keyword_validity(const string& key){
+    for(auto i : key){
+        if(not isalpha(i)){
+            cout << "Invalid key. Key should contain alphabetic letters only, try again" << endl;
+            cout << "->";
+            return false;
+        }
+    }
+
+    if (key.length() > 8){
+        cout << "Invalid key. Key cannot be more than 8 letters, try again" << endl;
+        cout << "->";
+        return false;
+    }
+    return true;
+}
+
+
+bool isHexa(string message){
+    message = strip(message);
+    if (message.length() % 2 != 0){
+        cout << "Invalid message, try again" << endl;
+        cout << "->";
+        return false;
+    }
+
+    for(auto i: message){
+        if((i < '0' || i > '9') && (i < 'A' || i > 'F')){
+            cout << "Invalid Hexadecimal input, try again." << endl;
+            cout << "->";
+            return false;
+        }
+    }
+    return true;
+}
+
+
+void xor_encryption(const string& message){
+    string keyInput, key, output, hexaOutput;
+    key = "";
+    cout << "Enter the secret key." << endl;
+    cout << "->";
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    getline(cin, keyInput);
+
+    // Setting the key.
+    int counter = 0;
+    for (int i = 0; i < message.length(); ++i) {
+        if (counter == keyInput.length()){
+            counter = 0;
+        }
+        key += keyInput[counter];
+        counter++;
+    }
+
+    // converting to hexadecimal
+    map <string, char> binary_to_hexa = {
+            {"0000", '0'}, {"0001", '1'}, {"0010", '2'}, {"0011", '3'},
+            {"0100", '4'}, {"0101", '5'}, {"0110", '6'}, {"0111", '7'},
+            {"1000", '8'}, {"1001", '9'}, {"1010", 'A'}, {"1011", 'B'},
+            {"1100", 'C'}, {"1101", 'D'}, {"1110", 'E'}, {"1111", 'F'}
+    };
+
+    //
+    for (int i = 0; i < message.length(); ++i) {
+        // converting each character to its binary representation.
+        bitset<8> m(message[i]);
+        bitset<8> k(key[i]);
+
+        // Performing the XOR operation.
+        bitset<8> xor_operation;
+        xor_operation = k ^ m;
+
+        string binaryGroups, hexa;
+
+        for (int j = 0; j < (xor_operation.to_string().length()); j += 4) {
+            // converting each 4 bits to hexadecimal.
+            binaryGroups = (xor_operation.to_string()).substr(j, 4);
+            hexa = binary_to_hexa[binaryGroups];
+            hexaOutput += hexa;
+        }
+        hexaOutput += " ";
+
+        // converting binary back to characters.
+        auto c = static_cast <char> (xor_operation.to_ulong());
+        output += c;
+    }
+
+    cout << endl;
+    cout << "Output: " << endl;
+    cout << "- Plain text: " << output << endl;
+    cout << "- Hexa: " << hexaOutput << endl;
+}
+
+
+void xor_decryption(string message){
+    while(!isHexa(message)){
+        getline(cin, message);
+    }
+    message = strip(message);
+    string keyInput, key, output;
+    key = "";
+    cout << "Enter the secret key." << endl;
+    cout << "->";
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    getline(cin, keyInput);
+
+    // Setting the key.
+    int counter = 0;
+    for (int i = 0; i < message.length(); ++i) {
+        if (counter == keyInput.length()){
+            counter = 0;
+        }
+        key += keyInput[counter];
+        counter++;
+    }
+
+    map <char, string> hexa_to_decimal = {
+            {'0', "0000"}, {'1', "0001"}, {'2', "0010"}, {'3', "0011"},
+            {'4', "0100"}, {'5', "0101"}, {'6', "0110"}, {'7', "0111"},
+            {'8', "1000"}, {'9', "1001"}, {'A', "1010"}, {'B', "1011"},
+            {'C', "1100"}, {'D', "1101"}, {'E', "1110"}, {'F', "1111"}
+    };
+
+    string hexa_group, binaryStr;
+    int k = 0;
+    for (int i = 0; i < message.length(); i += 2) {
+        hexa_group = message.substr(i, 2);
+
+        for (char j : hexa_group) {
+            binaryStr += hexa_to_decimal[j];
+        }
+
+        bitset<8> binary(binaryStr);
+        bitset<8> kk (key[k]);
+        k++;
+
+        binaryStr = "";
+
+        bitset<8> xor_operation;
+        xor_operation = binary ^ kk;
+
+        auto c = static_cast <char> (xor_operation.to_ulong());
+        output += c;
+    }
+    cout << "Message: " << output << endl;
+}
+
+
+void vignere_encryption(string message){
+    int ascii1 = 0, ascii2 = 0;
+    string keyWordInput, keyWord, encrypted;
+    char  encoding;
+    encrypted = "";
+
+    while(message.length() > 80){
+        cout << "Invalid message. Messages cannot be more than 80 characters, try again";
+        cout << "->";
+        getline(cin, message);
+    }
+
+    cout << "Enter the key word" << endl;
+    cout << "->";
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    getline(cin, keyWordInput);
+
+    while(not keyword_validity(keyWordInput)){
+        getline(cin, keyWordInput);
+    }
+
+    // Setting the key.
+    int counter = 0;
+    for (int i = 0; i < message.length(); ++i) {
+        if (counter == keyWordInput.length()){
+            counter = 0;
+        }
+        keyWord += keyWordInput[counter];
+        counter++;
+    }
+
+    for (int i = 0; i < message.length(); i++){
+        if (!(isalpha(message[i]))){
+            encrypted += message[i];
+        }
+        else{
+            ascii1 = int(toupper(message[i]));
+            ascii2 = int(toupper(keyWord[i]));
+            encoding = char(((ascii2 + ascii1) % 26) + 65);
+            encrypted += encoding;
+            counter++;
+        }
+    }
+    cout << "Encrypted message: " << encrypted << endl << endl;
+}
+
+
+void vignere_decryption(string message){
+    int ascii1 = 0, ascii2 = 0;
+    string keyWordInput, keyWord, decrypted;
+    char decoding;
+    decrypted = "";
+
+    while(message.length() > 80){
+        cout << "Invalid message. Messages cannot be more than 80 characters, try again" << endl;
+        cout << "->";
+        getline(cin, message);
+    }
+
+    cout << "Enter the key word" << endl;
+    cout << "->";
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    getline(cin, keyWordInput);
+
+    while(not keyword_validity(keyWordInput)){
+        getline(cin, keyWordInput);
+    }
+
+    // Setting the key.
+    int counter = 0;
+    for (int i = 0; i < message.length(); ++i) {
+        if (counter == keyWordInput.length()){
+            counter = 0;
+        }
+        keyWord += keyWordInput[counter];
+        counter++;
+    }
+
+    for (int i = 0; i < message.length(); i++){
+        if (!(isalpha(message[i]))){
+            decrypted += message[i];
+        }
+        else{
+            ascii1 = int(toupper(message[i]));
+            ascii2 = int(toupper(keyWord[i]));
+            decoding = char(((ascii1 - ascii2 + 26) % 26) + 65);
+            decrypted += decoding;
+            counter++;
+        }
+    }
+    cout << "Message: "<< decrypted << endl << endl;
+}
+
 
 bool poly_key_validity (const string& key){
     // Checking the validity of the cipher key and handling possible errors.
@@ -937,6 +1179,8 @@ int main() {
             cout << "4- Simple substitution cipher" << endl;
             cout << "5- Atbah cipher" << endl;
             cout << "7- Morse code cipher" << endl;
+            cout << "8- XOR cipher" << endl;
+            cout << "9- Vignere cipher" << endl;
             cout << "->";
 
             string cipherChoice;
@@ -971,7 +1215,14 @@ int main() {
                     morse_code_cipher(message);
                     break;
                 }
-
+                else if (cipherChoice == "8"){
+                    xor_encryption(message);
+                    break;
+                }
+                else if (cipherChoice == "9"){
+                    vignere_encryption(message);
+                    break;
+                }
 
                 else{
                     cout << "Please enter a valid choice" << endl;
@@ -995,6 +1246,8 @@ int main() {
             cout << "4- Simple substitution cipher" << endl;
             cout << "5- Atbash cipher" << endl;
             cout << "7- Morse code cipher" << endl;
+            cout << "8- XOR cipher" << endl;
+            cout << "9- Vignere cipher" << endl;
             cout << "->";
 
             string cipher_choice;
@@ -1027,8 +1280,14 @@ int main() {
                     break;
 
                 }
-
-
+                else if (cipher_choice == "8"){
+                    xor_decryption(encrypted);
+                    break;
+                }
+                else if (cipher_choice == "9"){
+                    vignere_decryption(encrypted);
+                    break;
+                }
                 else{
                     cout << "Please enter a valid choice" << endl;
                     break;
