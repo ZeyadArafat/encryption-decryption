@@ -93,6 +93,102 @@ bool poly_key_validity (const string& key){
     return true;
 }
 
+int modulo(int a, int b) {
+    return (a % b + b) % b;
+}
+
+void encryptAffineCipher(const string& text) {
+    map<char, int> affine_map = {
+            {'a', 0}, {'b', 1}, {'c', 2}, {'d', 3}, {'e', 4},
+            {'f', 5}, {'g', 6}, {'h', 7}, {'i', 8}, {'j', 9},
+            {'k', 10}, {'l', 11}, {'m', 12}, {'n', 13}, {'o', 14},
+            {'p', 15}, {'q', 16}, {'r', 17}, {'s', 18}, {'t', 19},
+            {'u', 20}, {'v', 21}, {'w', 22}, {'x', 23}, {'y', 24},
+            {'z', 25}
+    };
+
+    map<int, char> reverse_affine_map;
+    for (const auto& pair : affine_map) {
+        reverse_affine_map[pair.second] = pair.first;
+    }
+
+    string clear_text, cipher_text;
+    int a, b, result;
+
+    while (true) {
+        cout << "Enter (a, b): ";
+        cin >> a >> b;
+
+        // Check if both a and b are positive integers
+        if (a > 0 && b > 0) {
+            break; // Exit the loop if both are valid
+        } else {
+            cout << "Please enter positive numbers only." << endl;
+            cin.clear(); // Clear error flags
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
+        }
+    }
+
+    // Process the input text
+    for (int i = 0; i < text.length(); i++) {
+        if (isalpha(text[i])) {
+            clear_text += tolower(text[i]); // Convert to lowercase
+        }
+    }
+
+    // Apply the affine cipher and build the cipher text
+    for (int i = 0; i < clear_text.length(); i++) {
+        result = (a * affine_map[clear_text[i]] + b) % 26;
+        cipher_text += toupper(reverse_affine_map[result]); // Convert to uppercase
+    }
+
+    cout << "Cipher text: " << cipher_text <<endl;
+}
+
+void decryptAffineCipher(const string& text) {
+    map<char, int> affine_map = {
+            {'a', 0}, {'b', 1}, {'c', 2}, {'d', 3}, {'e', 4},
+            {'f', 5}, {'g', 6}, {'h', 7}, {'i', 8}, {'j', 9},
+            {'k', 10}, {'l', 11}, {'m', 12}, {'n', 13}, {'o', 14},
+            {'p', 15}, {'q', 16}, {'r', 17}, {'s', 18}, {'t', 19},
+            {'u', 20}, {'v', 21}, {'w', 22}, {'x', 23}, {'y', 24},
+            {'z', 25}
+    };
+
+    map<int, char> reverse_affine_map;
+    for (const auto& pair : affine_map) {
+        reverse_affine_map[pair.second] = pair.first;
+    }
+
+    string clear_text, decipher_text;
+    int b, c, result;
+    while (true) {
+        cout << "Enter (b , c): ";
+        cin >> b >> c;
+
+        // Check if both a and b are positive integers
+        if (b > 0 && c > 0) {
+            break; // Exit the loop if both are valid
+        } else {
+            cout << "Please enter positive numbers only." << endl;
+            cin.clear(); // Clear error flags
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
+        }
+    }
+    // Process the input text
+    for (int i = 0; i < text.length(); i++) {
+        if (isalpha(text[i])) {
+            clear_text += tolower(text[i]); // Convert to lowercase
+        }
+    }
+    // Apply the affine cipher and build the deciphered text
+    for (int i = 0; i < clear_text.length(); i++) {
+        result = modulo(c * (affine_map[clear_text[i]] - b) ,26) ;
+        decipher_text += toupper(reverse_affine_map[result]); // Convert to uppercase
+    }
+
+    cout << "Deciphered text: " << decipher_text << endl;
+}
 
 void polybius_square_encryption(const string& message){
     // App data
@@ -499,7 +595,7 @@ void morse_code_decipher(const string& text) {
                 decipher_text += morse_decipher[morse_char];
                 morse_char = "";
             } else {
-                decipher_text += " "; // Add space for word separation
+                decipher_text += ""; // Add space for word separation
             }
         }
     }
@@ -519,7 +615,7 @@ void rail_Fence_Encrypt(const string& message) {
     // this loop to clear text from any thing not letters before start
     for (int i = 0; i < clear_text.length(); ++i) {
         if (isalpha(clear_text[i])){
-           text += clear_text[i] ;
+            text += clear_text[i] ;
         }
     }
     // print welcome message
@@ -931,6 +1027,7 @@ int main() {
             getline(cin, message);
 
             cout << "Which Cipher do you like to choose?" << endl;
+            cout << "0- Affine cipher" << endl ;
             cout << "1- Polybius Square cipher" << endl;
             cout << "2- Route cipher" << endl;
             cout << "3- Rail-fence cipher" << endl;
@@ -943,7 +1040,11 @@ int main() {
             cin >> cipherChoice;
 
             while(true){
-                if (cipherChoice == "1"){           // for the polybius square cipher encryptedText.
+                if (cipherChoice == "0"){
+                    encryptAffineCipher(message);
+                    break;
+                }
+                else if (cipherChoice == "1"){           // for the polybius square cipher encryptedText.
                     polybius_square_encryption(message);
                     break;
                 }
@@ -989,6 +1090,7 @@ int main() {
             getline(cin, encrypted);
 
             cout << "What cipher would you like to use?" << endl;
+            cout << "0- Affine cipher" << endl ;
             cout << "1- Polybius Square cipher" << endl;
             cout << "2- Route cipher" << endl;
             cout << "3- Rail-fence cipher" << endl;
@@ -1001,7 +1103,11 @@ int main() {
             cin >> cipher_choice;
 
             while(true){
-                if (cipher_choice == "1"){              // for the polybius square cipher decryption.
+                if (cipher_choice == "0"){
+                    decryptAffineCipher(encrypted);
+                    break;
+                }
+                else if (cipher_choice == "1"){              // for the polybius square cipher decryption.
                     polybius_square_decryption(encrypted);
                     break;
                 }
@@ -1027,7 +1133,6 @@ int main() {
                     break;
 
                 }
-
 
                 else{
                     cout << "Please enter a valid choice" << endl;
