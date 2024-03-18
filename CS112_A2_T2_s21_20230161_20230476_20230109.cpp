@@ -188,11 +188,11 @@ bool atbash_key_validity(string key){
 }
 
 
-string completeKey(string key){
+string complete_simple_sub_Key(string key){
     string alpha = "abcdefghijklmnoprqstuvwxyz";
     int letterIndex;
     for (int i = 0; i < key.length(); ++i) {
-        letterIndex = alpha.find(key[i]);
+        letterIndex = alpha.find(tolower(key[i]));
         alpha.erase(alpha.begin()+letterIndex);
     }
     key += alpha;
@@ -435,6 +435,8 @@ void route_cipher_decryption(string encrypted_sentence){
     }
     cout << decrypted_sentence << endl << endl; // printing the decrypted text
 }
+
+
 void morse_code_cipher(const string& text) {
     map <char , string>  morse_cipher = {
             {'a' , ".-"}, {'b' , "-..."}, {'c' , "-.-."} ,{'d' , "-.."} , {'e',"."} ,
@@ -467,6 +469,7 @@ void morse_code_cipher(const string& text) {
     cout<< cipher_text << endl;
 }
 
+
 void morse_code_decipher(const string& text) {
     map<string, char> morse_decipher = {
             {".-", 'a'}, {"-...", 'b'}, {"-.-.", 'c'}, {"-..", 'd'}, {".", 'e'},
@@ -498,6 +501,7 @@ void morse_code_decipher(const string& text) {
 
     cout << decipher_text << endl;
 }
+
 
 void rail_Fence_Encrypt(const string& message) {
     // set main variables
@@ -614,7 +618,7 @@ void rail_Fence_Decrypt(const string& message) {
     // set main variables
     string clear_text = message,text, key, decryptedText;
     int num;
-    // this loop to clear text from any thing not letters before start 
+    // this loop to clear text from any thing not letters before start
     for (int i = 0; i < clear_text.length(); ++i) {
         if (isalpha(clear_text[i])){
             text += clear_text[i] ;
@@ -709,7 +713,7 @@ void simple_sub_encryption(string textToEncrypt){
     }
     if (simpleSub_Key_Validity(key)) {
         if (key.length() < 25) {
-            key = completeKey(key);
+            key = complete_simple_sub_Key(key);
         }
         for (int i = 0; i < textToEncrypt.length(); ++i) {
             if (isalpha(textToEncrypt[i])){
@@ -740,7 +744,7 @@ void simple_sub_decryption(string textToDecrypt){
     }
     if (simpleSub_Key_Validity(key)) {
         if (key.length() < 25) {
-            key = completeKey(key);
+            key = complete_simple_sub_Key(key);
         }
         for (int i = 0; i < textToDecrypt.length(); ++i) {
             if (isalpha(textToDecrypt[i])){
@@ -919,9 +923,9 @@ int main() {
             cout << "1- Polybius Square cipher" << endl;
             cout << "2- Route cipher" << endl;
             cout << "3- Rail-fence cipher" << endl;
-            cout << "4- simple substitution cipher" << endl;
+            cout << "4- Simple substitution cipher" << endl;
             cout << "5- Atbah cipher" << endl;
-            cout << "7- More code cipher" << endl;
+            cout << "7- Morse code cipher" << endl;
             cout << "->";
 
             string cipherChoice;
@@ -977,9 +981,9 @@ int main() {
             cout << "1- Polybius Square cipher" << endl;
             cout << "2- Route cipher" << endl;
             cout << "3- Rail-fence cipher" << endl;
-            cout << "4- simple substitution cipher" << endl;
+            cout << "4- Simple substitution cipher" << endl;
             cout << "5- Atbash cipher" << endl;
-            cout << "7- morse code cipher" << endl;
+            cout << "7- Morse code cipher" << endl;
             cout << "->";
 
             string cipher_choice;
