@@ -6,7 +6,7 @@ Authors:
     Zeyad Mohamed Arafat - 20230161   s21   zeyadarafat833@gmail.com
     John Ayman Demian    - 20230109   s21   johnayman03@gmail.com
     Youssef Ahmed Beshir - 20230476   s21   youssefahmedbeshir@gmail.com
-    
+
 Zeyad Mohamed Arafat:
     Route Cipher
     Atbash Cipher
@@ -26,6 +26,7 @@ Youssef Ahmed Beshir:
 
 
 #include <bits/stdc++.h>
+#include <map>
 using namespace std;
 
 
@@ -38,6 +39,53 @@ string strip(const string& sentence){
         }
     }
     return strippedSentence;
+}
+
+ // Baconian Cipher
+void baconian_encryption(string textToEncrypt){
+    string encryptedText = "";
+    map<char, string> encryptionMap = {
+        {'A', "aaaaa"}, {'B', "aaaab"}, {'c', "aaaba"}, {'D', "aaabb"}, {'E', "aabaa"}, {'F', "aabab"}, {'G', "aabba"},
+        {'H', "aabbb"}, {'I', "abaaa"}, {'J', "abaab"}, {'k', "ababa"}, {'L', "ababb"}, {'M', "abbaa"}, {'N', "abbab"},
+        {'O', "abbba"}, {'P', "abbbb"}, {'Q', "baaaa"}, {'R', "baaab"}, {'S', "baaba"}, {'T', "baabb"}, {'U', "babaa"},
+        {'V', "babab"}, {'W', "babba"}, {'X', "babbb"}, {'Y', "bbaaa"}, {'Z', "bbaab"}};
+
+    getline(cin, textToEncrypt);
+    for (int i = 0; i < textToEncrypt.length(); i++){
+        if (isalpha(textToEncrypt[i])){
+            encryptedText += encryptionMap[toupper(textToEncrypt[i])];
+        }
+        else{
+            encryptedText += textToEncrypt[i];
+        }
+
+    }
+    cout << encryptedText << endl;
+}
+
+
+void baconian_decryption(string textToDecrypt){
+    string decryptedText = "", code = "";
+    map<string, string > decryptionMap = {
+        {"aaaaa", "A"}, {"aaaab", "B"}, {"aaaba", "C"}, {"aaabb", "D"}, {"aabaa", "E"}, {"aabab", "F"}, {"aabba", "G"},
+        {"aabbb", "H"}, {"abaaa", "I"}, {"abaab", "J"}, {"ababa", "K"}, {"ababb", "L"}, {"abbaa", "M"}, {"abbab", "N"},
+        {"abbba", "O"}, {"abbbb", "P"}, {"baaaa", "Q"}, {"baaab", "R"}, {"baaba", "S"}, {"baabb", "T"}, {"babaa", "U"},
+        {"babab", "V"}, {"babba", "V"}, {"babbb", "X"}, {"bbaaa", "Y"}, {"bbaab", "Z"}};
+    for (int i = 0; i < textToDecrypt.length(); i++){
+        if (isalpha(textToDecrypt[i])){
+            code += textToDecrypt[i];
+            if (code.length() % 5 == 0 ){
+                decryptedText += decryptionMap[code];
+                code = "";
+            }
+
+        }
+        else{
+            decryptedText += textToDecrypt[i];
+        }
+
+    }
+    cout << decryptedText << endl;
 }
 
 
@@ -1340,6 +1388,7 @@ int main() {
             cout << "3- Rail-fence cipher" << endl;
             cout << "4- Simple substitution cipher" << endl;
             cout << "5- Atbash cipher" << endl;
+            cout << "6- Baconian cipher" << endl;
             cout << "7- Morse code cipher" << endl;
             cout << "8- XOR cipher" << endl;
             cout << "9- Vignere cipher" << endl;
@@ -1377,14 +1426,22 @@ int main() {
                     atbash_encryption(message);
                     break;
                 }
+
+                else if (cipherChoice == "6"){
+                    baconian_encryption(message);
+                    break;
+                }
+
                 else if (cipherChoice == "7"){
                     morse_code_cipher(message);
                     break;
                 }
+
                 else if (cipherChoice == "8"){
                     xor_encryption(message);
                     break;
                 }
+
                 else if (cipherChoice == "9"){
                     vignere_encryption(message);
                     break;
@@ -1412,6 +1469,7 @@ int main() {
             cout << "3- Rail-fence cipher" << endl;
             cout << "4- Simple substitution cipher" << endl;
             cout << "5- Atbash cipher" << endl;
+            cout << "6- Baconian cipher" << endl;
             cout << "7- Morse code cipher" << endl;
             cout << "8- XOR cipher" << endl;
             cout << "9- Vignere cipher" << endl;
@@ -1446,6 +1504,13 @@ int main() {
                     atbash_decryption(encrypted);
                     break;
                 }
+
+                else if (cipher_choice == "6")
+                {
+                    baconian_decryption(encrypted);
+                    break;
+                }
+
                 else if (cipher_choice == "7") {
                     morse_code_decipher(encrypted);
                     break;
