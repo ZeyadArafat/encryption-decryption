@@ -1,13 +1,12 @@
 /*
-FCAI - Structured Programming - 2024 - Assignment 2
-Program Name: Cipher
-program Description: This is a simple encryption and decryption program using 10 different ciphers.
-Last Modification Date: 18/3/2024.
-Author1: Zeyad Mohamed Arafat   20230161   s21
-Author2: Youssef Ahmed Beshir   20230476   s21
-Author3: John Ayman Demian      20230109   s21
-Teaching Assistant: Rana
-
+File: CS112_A2_T4_21_20230161_20230109_20230476.cpp
+Purpose: This is a simple encryption and decryption program using 10 different ciphers.
+Last Modification Date: 19/3/2024.
+Authors:
+    Zeyad Mohamed Arafat - 20230161   s21   zeyadarafat833@gmail.com
+    John Ayman Demian    - 20230109   s21   johnayman03@gmail.com
+    Youssef Ahmed Beshir - 20230476   s21   youssefahmedbeshir@gmail.com
+    
 Zeyad Mohamed Arafat:
     Route Cipher
     Atbash Cipher
