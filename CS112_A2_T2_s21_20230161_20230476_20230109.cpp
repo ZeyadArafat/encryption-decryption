@@ -45,6 +45,8 @@ bool isHexa(string message){
     }
     return true;
 }
+
+
 void xor_encryption(const string& message){
     string keyInput, key, output, hexaOutput;
     key = "";
@@ -101,6 +103,8 @@ void xor_encryption(const string& message){
     cout << "- Plain text: " << output << endl;
     cout << "- Hexa: " << hexaOutput << endl;
 }
+
+
 void xor_decryption(string message){
     while(!isHexa(message)){
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
@@ -174,6 +178,8 @@ bool keyword_validity(const string& key){
     }
     return true;
 }
+
+
 void vignere_encryption(string message){
     int ascii1 = 0, ascii2 = 0;
     string keyWordInput, keyWord, encrypted;
@@ -219,6 +225,8 @@ void vignere_encryption(string message){
     }
     cout << "Encrypted message: " << encrypted << endl << endl;
 }
+
+
 void vignere_decryption(string message){
     int ascii1 = 0, ascii2 = 0;
     string keyWordInput, keyWord, decrypted;
@@ -269,6 +277,8 @@ void vignere_decryption(string message){
 int modulo(int a, int b) {
     return (a % b + b) % b;
 }
+
+
 void encryptAffineCipher(const string& text) {
     map<char, int> affine_map = {
             {'a', 0}, {'b', 1}, {'c', 2}, {'d', 3}, {'e', 4},
@@ -316,6 +326,8 @@ void encryptAffineCipher(const string& text) {
 
     cout << "Cipher text: " << cipher_text <<endl;
 }
+
+
 void decryptAffineCipher(const string& text) {
     map<char, int> affine_map = {
             {'a', 0}, {'b', 1}, {'c', 2}, {'d', 3}, {'e', 4},
@@ -399,6 +411,8 @@ bool poly_decrypted_validity(string & encrypted){
     }
     return true;
 }
+
+
 bool poly_key_validity (const string& key){
     // Checking the validity of the cipher key and handling possible errors.
     int number;
@@ -439,6 +453,8 @@ bool poly_key_validity (const string& key){
     }
     return true;
 }
+
+
 void polybius_square_encryption(const string& message){
     // App data
     char poly[6][6] = {{' ', ' ', ' ', ' ', ' ', ' '},
@@ -485,6 +501,8 @@ void polybius_square_encryption(const string& message){
     }
     cout << "Encrypted message -> " <<encrypted << endl << endl;
 }
+
+
 void polybius_square_decryption(string &encrypted) {
     // App data
     string poly[6][6] = {{" ", "",  "",  "",  "",  ""},
@@ -565,6 +583,8 @@ int route_key_validity(){ // to make sure that the secret key of the route ciphe
     }
     return secretKey;
 }
+
+
 void route_cipher_encryption(string sentence_to_encrypt){
 
     // Explain to the user what he needs to do in order to encrypt the text.
@@ -653,6 +673,8 @@ void route_cipher_encryption(string sentence_to_encrypt){
     cout << encryptedSentence << endl << endl; // printing the encrypted text.
 
 }
+
+
 void route_cipher_decryption(string encrypted_sentence){
 
     // Explain to the user what he needs to do in order to decrypt the text.
@@ -761,6 +783,8 @@ void morse_code_cipher(const string& text) {
     }
     cout<< cipher_text << endl;
 }
+
+
 void morse_code_decipher(const string& text) {
     map<string, char> morse_decipher = {
             {".-", 'a'}, {"-...", 'b'}, {"-.-.", 'c'}, {"-..", 'd'}, {".", 'e'},
@@ -792,6 +816,7 @@ void morse_code_decipher(const string& text) {
 
     cout << decipher_text << endl;
 }
+
 
 // Rail fence Cipher
 void rail_Fence_Encrypt(const string& message) {
@@ -903,6 +928,8 @@ void rail_Fence_Encrypt(const string& message) {
 
     }
 }
+
+
 void rail_Fence_Decrypt(const string& message) {
     // set main variables
     string clear_text = message,text, key, decryptedText;
@@ -987,6 +1014,7 @@ void rail_Fence_Decrypt(const string& message) {
     }
 }
 
+
 // Simple substitution Cipher
 string lower_case(string key){
     for (int i = 0; i < key.length(); i++){
@@ -994,12 +1022,16 @@ string lower_case(string key){
     }
     return key;
 }
+
+
 bool simpleSub_Key_Validity(string key){ // check the validity of the simple substitution key.
     for (char i : key) {
         if (!isalpha(i))return false;
     }
     return true;
 }
+
+
 string complete_simple_sub_Key(string key){ // complete the key of the simple substitution cipher if needed.
     string alpha = "abcdefghijklmnoprqstuvwxyz";
     int letterIndex;
@@ -1012,6 +1044,8 @@ string complete_simple_sub_Key(string key){ // complete the key of the simple su
     key += alpha;
     return key;
 }
+
+
 void simple_sub_encryption(string textToEncrypt){
     cout << "welcome to the simple substitution encryption, in order to get your text encrypted you need to enter a secret key" << endl;
     cout << "the key is any sequence of alphapetic characters(maximum 25 character)" << endl;
@@ -1042,6 +1076,8 @@ void simple_sub_encryption(string textToEncrypt){
     }
     cout << encryptedText << endl;
 }
+
+
 void simple_sub_decryption(string textToDecrypt){
     cout << "welcome to the simple substitution decryption, in order to get your text decrypted you need to enter the secret key" << endl;
     cout << "the key is any sequence of alphapetic characters(maximum 25 character)" << endl;
@@ -1078,39 +1114,43 @@ bool atbash_key_validity(string key){ // check the validity of the atbash key.
     if((key == "2") or (key == "4")) return true;
     return false;
 }
+
+
 void atbash_encryption(string textToEncrypt){
+    // explain the cipher to the user.
     cout << "welcom to atbash encryption, in order to get some text encrypted you need to enter a secret key" << endl;
     cout << "valid keys are (2, 4)" << endl;
     string key, encryptedText = "";
     cout << "please enter a secret key: ";
-    cin >> key;
+    cin >> key; // get the key form user.
 
-    while (!atbash_key_validity(key)){
+    while (!atbash_key_validity(key)){ // check the validity of the key (if not valid ask the user to input it again).
         cout << "please enter a valid key" << endl;
         cin >> key;
     }
 
-    if (key == "2"){
+    if (key == "2"){ // if the key is "2", split the alphabet to two halfs.
         string firstAlpha = "ABCDEFGHIJKLM", secondAlpha = "ZYXWVUTSRQPON";
-        for (int i = 0; i < textToEncrypt.length(); i++){
-            if (isalpha(textToEncrypt[i])){
+        for (int i = 0; i < textToEncrypt.length(); i++){ // iterate through each character of the text.
+            if (isalpha(textToEncrypt[i])){ // if the character is alpha search for it in one of the halfs and get its index.
                 if (int(toupper(textToEncrypt[i])) <= 77){
                     int letterIndex = firstAlpha.find(toupper(textToEncrypt[i]));
+                    // add the same index from the other half.
                     encryptedText += secondAlpha[letterIndex];
                 }
-                else
-                {
+                else{
                     int letterIndex = secondAlpha.find(toupper(textToEncrypt[i]));
                     encryptedText += firstAlpha[letterIndex];
                 }
             }
-            else{
+            else{// if the character is not alpha leave it as it is.
                 encryptedText += textToEncrypt[i];
             }
         }
 
     }
-    else if (key == "4"){
+    else if (key == "4"){ // if the key is "4", split the alphabet to four parts.
+    // the same logic goes for the key "4" as in the key "2".
         string firstAlpha = "ABCDEF", secondAlpha = "MLKJIH", thirdAlpha = "NOPQRS", fourthAlpha = "ZYXWVU";
         for (int i = 0; i < textToEncrypt.length(); i++){
             if (isalpha(textToEncrypt[i])){
@@ -1142,7 +1182,10 @@ void atbash_encryption(string textToEncrypt){
     }
     cout << encryptedText << endl;
 }
+
+
 void atbash_decryption(string textToEncrypt){
+    // this is the same as the encryption function, but the printed messages are diffrent.
     cout << "welcom to atbash decryption, in order to get some text decrypted you need to enter the secret key" << endl;
     cout << "valid keys are (2, 4)" << endl;
     string key, decryptedText = "";
