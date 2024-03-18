@@ -1,15 +1,28 @@
 /*
 FCAI - Structured Programming - 2024 - Assignment 2
 Program Name: Cipher
-program Description: This program is a simple encryptedText and decryption program using three simple ciphers.
-Last Modification Date: 9/3/2024.
+program Description: This is a simple encryption and decryption program using 10 different ciphers.
+Last Modification Date: 18/3/2024.
 Author1: Zeyad Mohamed Arafat   20230161   s21
 Author2: Youssef Ahmed Beshir   20230476   s21
 Author3: John Ayman Demian      20230109   s21
 Teaching Assistant: Rana
-Polybius square Cipher ---------------> Youssef Ahmed Beshir
-Route Cipher -------------------------> Zeyad Mohamed Arafat
-Rail fence Cipher --------------------> John Ayman Demian
+
+Zeyad Mohamed Arafat:
+    Route Cipher
+    Atbash Cipher
+    Simple substitution Cipher
+    Baconian Cipher
+
+John Ayman Demian:
+    Rail fence Cipher
+    Affine Cipher
+    Morse Code
+
+Youssef Ahmed Beshir:
+    Polybius square Cipher
+    XOR Cipher
+    Vignere Cipher
 */
 
 
@@ -17,7 +30,8 @@ Rail fence Cipher --------------------> John Ayman Demian
 using namespace std;
 
 
-string strip(const string& sentence){ // to remove the spaces in the text in the route cipher encryptedText .
+string strip(const string& sentence){
+    // To remove spaces from text
     string strippedSentence;
     for(char i : sentence){
         if(i != ' '){
@@ -27,15 +41,17 @@ string strip(const string& sentence){ // to remove the spaces in the text in the
     return strippedSentence;
 }
 
+
 // XOR Cipher
 bool isHexa(string message){
     message = strip(message);
+    // Decrypted messages in hexa should only be length of an even number
     if (message.length() % 2 != 0){
         cout << "Invalid message, try again" << endl;
         cout << "->";
         return false;
     }
-
+    // Make sure that input is a valid hexadecimal number
     for(auto i: message){
         if((i < '0' || i > '9') && (i < 'A' || i > 'F')){
             cout << "Invalid Hexadecimal input, try again." << endl;
@@ -50,12 +66,15 @@ bool isHexa(string message){
 void xor_encryption(const string& message){
     string keyInput, key, output, hexaOutput;
     key = "";
-    cout << "Enter the secret key." << endl;
+    cout << "Welcome to the XOR cipher, a secret key of any number of characters (letters, digits) is required."
+    << endl << endl;
+    cout << "Enter the secret key" << endl;
     cout << "->";
+
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
     getline(cin, keyInput);
 
-    // Setting the key.
+    // Setting the key, (Assigning each character in the message to the key).
     int counter = 0;
     for (int i = 0; i < message.length(); ++i) {
         if (counter == keyInput.length()){
@@ -65,7 +84,7 @@ void xor_encryption(const string& message){
         counter++;
     }
 
-    // converting to hexadecimal
+    // Binary to hexadecimal map
     map <string, char> binary_to_hexa = {
             {"0000", '0'}, {"0001", '1'}, {"0010", '2'}, {"0011", '3'},
             {"0100", '4'}, {"0101", '5'}, {"0110", '6'}, {"0111", '7'},
@@ -73,15 +92,14 @@ void xor_encryption(const string& message){
             {"1100", 'C'}, {"1101", 'D'}, {"1110", 'E'}, {"1111", 'F'}
     };
 
-    //
     for (int i = 0; i < message.length(); ++i) {
         // converting each character to its binary representation.
-        bitset<8> m(message[i]);
-        bitset<8> k(key[i]);
+        bitset<8> binaryMsg (message[i]);
+        bitset<8> binaryKey (key[i]);
 
         // Performing the XOR operation.
         bitset<8> xor_operation;
-        xor_operation = k ^ m;
+        xor_operation = binaryKey ^ binaryMsg;
 
         string binaryGroups, hexa;
 
@@ -101,25 +119,30 @@ void xor_encryption(const string& message){
     cout << endl;
     cout << "Output: " << endl;
     cout << "- Plain text: " << output << endl;
-    cout << "- Hexa: " << hexaOutput << endl;
+    cout << "- Hexa: " << hexaOutput << endl << endl;
 }
 
 
 void xor_decryption(string message){
+    // Checking validity
     while(!isHexa(message)){
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
         getline(cin, message);
     }
-
+    // Removing Spaces
     message = strip(message);
     string keyInput, key, output;
     key = "";
+
+    cout << "Welcome to the XOR cipher, a secret key of any number of characters (letters, digits) is required."
+    << endl << endl;
     cout << "Enter the secret key." << endl;
     cout << "->";
+
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
     getline(cin, keyInput);
 
-    // Setting the key.
+    // Setting the key, (Assigning each character in the message to the key).
     int counter = 0;
     for (int i = 0; i < message.length(); ++i) {
         if (counter == keyInput.length()){
@@ -129,6 +152,7 @@ void xor_decryption(string message){
         counter++;
     }
 
+    // Hexa to binary map
     map <char, string> hexa_to_binary = {
             {'0', "0000"}, {'1', "0001"}, {'2', "0010"}, {'3', "0011"},
             {'4', "0100"}, {'5', "0101"}, {'6', "0110"}, {'7', "0111"},
@@ -158,8 +182,9 @@ void xor_decryption(string message){
         auto c = static_cast <char> (xor_operation.to_ulong());
         output += c;
     }
-    cout << "Message: " << output << endl;
+    cout << "Message: " << output << endl << endl;
 }
+
 
 // Vignere Cipher
 bool keyword_validity(const string& key){
@@ -192,16 +217,20 @@ void vignere_encryption(string message){
         getline(cin, message);
     }
 
+    cout << "Welcome to vignere Cipher, A key of 1 - 8 letters is required." << endl << endl;
     cout << "Enter the key word" << endl;
     cout << "->";
+
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
     getline(cin, keyWordInput);
 
+    // Checking Validity
     while(not keyword_validity(keyWordInput)){
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
         getline(cin, keyWordInput);
     }
 
-    // Setting the key.
+    // Setting the key, (Assigning each character to the key)
     int counter = 0;
     for (int i = 0; i < message.length(); ++i) {
         if (counter == keyWordInput.length()){
@@ -239,8 +268,10 @@ void vignere_decryption(string message){
         getline(cin, message);
     }
 
+    cout << "Welcome to vignere Cipher, A key of 1 - 8 letters is required." << endl << endl;
     cout << "Enter the key word" << endl;
     cout << "->";
+
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
     getline(cin, keyWordInput);
 
@@ -248,7 +279,7 @@ void vignere_decryption(string message){
         getline(cin, keyWordInput);
     }
 
-    // Setting the key.
+    // Setting the key, (Assigning each character to the key)
     int counter = 0;
     for (int i = 0; i < message.length(); ++i) {
         if (counter == keyWordInput.length()){
@@ -272,6 +303,7 @@ void vignere_decryption(string message){
     }
     cout << "Message: "<< decrypted << endl << endl;
 }
+
 
 // Affine Cipher
 int modulo(int a, int b) {
@@ -324,7 +356,7 @@ void encryptAffineCipher(const string& text) {
         cipher_text += toupper(reverse_affine_map[result]); // Convert to uppercase
     }
 
-    cout << "Cipher text: " << cipher_text <<endl;
+    cout << "Cipher text: " << cipher_text << endl << endl;
 }
 
 
@@ -359,19 +391,20 @@ void decryptAffineCipher(const string& text) {
         }
     }
     // Process the input text
-    for (int i = 0; i < text.length(); i++) {
-        if (isalpha(text[i])) {
-            clear_text += tolower(text[i]); // Convert to lowercase
+    for (char i : text) {
+        if (isalpha(i)) {
+            clear_text += tolower(i); // Convert to lowercase
         }
     }
     // Apply the affine cipher and build the deciphered text
-    for (int i = 0; i < clear_text.length(); i++) {
-        result = modulo(c * (affine_map[clear_text[i]] - b) ,26) ;
+    for (char i : clear_text) {
+        result = modulo(c * (affine_map[i] - b) ,26) ;
         decipher_text += toupper(reverse_affine_map[result]); // Convert to uppercase
     }
 
-    cout << "Deciphered text: " << decipher_text << endl;
+    cout << "Deciphered text: " << decipher_text << endl << endl;
 }
+
 
 // Polybius square Cipher
 bool poly_decrypted_validity(string & encrypted){
@@ -465,6 +498,7 @@ void polybius_square_encryption(const string& message){
                        {' ', 'V', 'W', 'X', 'Y', 'Z'}};
 
     string keyInput;
+    cout << "Welcome to the polybius cipher, A key of numbers from 1 to 5 in any order is required" << endl << endl;
     cout << "Enter the key: " << endl;
     cout << "->";
     cin >> keyInput;
@@ -517,6 +551,7 @@ void polybius_square_decryption(string &encrypted) {
         getline(cin, encrypted);
     }
 
+    cout << "Welcome to the polybius cipher, A key of numbers from 1 to 5 in any order is required" << endl << endl;
     cout << "Enter the key." << endl;
     cout << "->";
     string keyInput;
@@ -569,11 +604,14 @@ void polybius_square_decryption(string &encrypted) {
         }
     }
 
-    cout << "Decrypted message --> "<< decrypted << endl;
+    cout << "Decrypted message --> "<< decrypted << endl << endl;
 }
 
+
+
 // Route Cipher
-int route_key_validity(){ // to make sure that the secret key of the route cipher is valid.
+int route_key_validity(){
+    // To make sure that the secret key of the route cipher is valid.
     int secretKey;
     cout << "Please enter the secret key: ";
     while (!(cin >> secretKey) || secretKey <= 0 ){
@@ -585,10 +623,10 @@ int route_key_validity(){ // to make sure that the secret key of the route ciphe
 }
 
 
-void route_cipher_encryption(string sentence_to_encrypt){
+void route_cipher_encryption(const string& sentence_to_encrypt){
 
     // Explain to the user what he needs to do in order to encrypt the text.
-    cout << "welcome to the route cipher encryptedText in order to encrypt some text you need to choose a secret key" << endl << endl;
+    cout << "Welcome to the route cipher encryptedText in order to encrypt some text you need to choose a secret key" << endl << endl;
 
     int secretKey = route_key_validity();            // getting the secret key and checking its validity.
 
@@ -675,10 +713,10 @@ void route_cipher_encryption(string sentence_to_encrypt){
 }
 
 
-void route_cipher_decryption(string encrypted_sentence){
+void route_cipher_decryption(const string& encrypted_sentence){
 
     // Explain to the user what he needs to do in order to decrypt the text.
-    cout << "welcome to the route cipher decryption in order to decrypt some text you need to enter the secret key" << endl << endl;
+    cout << "Welcome to the route cipher decryption in order to decrypt some text you need to enter the secret key" << endl << endl;
 
 
     int secretKey = route_key_validity();       // getting the secret key and checking its validity.
@@ -751,6 +789,7 @@ void route_cipher_decryption(string encrypted_sentence){
     cout << decrypted_sentence << endl << endl; // printing the decrypted text
 }
 
+
 // Morse code Cipher
 void morse_code_cipher(const string& text) {
     map <char , string>  morse_cipher = {
@@ -763,25 +802,25 @@ void morse_code_cipher(const string& text) {
     string clear_text , cipher_text;
     cipher_text = "" ;
 
-    for (int i = 0; i < text.length(); i++)
+    for (char i : text)
     {
-        if(isalpha(text[i]) || isdigit(text[i])){
-            clear_text += tolower(text[i]) ;
-        } else if (text[i] == ' ') { // If the character is a space
+        if(isalpha(i) || isdigit(i)){
+            clear_text += tolower(i) ;
+        } else if (i == ' ') { // If the character is a space
             clear_text += " "; // Add a space to the clear_text directly
         }
     }
 
-    for (int i = 0; i < clear_text.length(); i++)
+    for (char i : clear_text)
     {
-        if (clear_text[i] == ' ') {
+        if (i == ' ') {
             cipher_text += "   "; // Add three spaces for word separation
         } else {
-            cipher_text += morse_cipher[clear_text[i]]; // Add Morse code for the current character
+            cipher_text += morse_cipher[i]; // Add Morse code for the current character
             cipher_text += " "; // Add one space between letters
         }
     }
-    cout<< cipher_text << endl;
+    cout << cipher_text << endl << endl;
 }
 
 
@@ -797,10 +836,10 @@ void morse_code_decipher(const string& text) {
     string decipher_text, morse_char;
     decipher_text = "";
 
-    for (int i = 0; i < text.length(); i++) {
-        if (text[i] == '.' || text[i] == '-') {
-            morse_char += text[i];
-        } else if (text[i] == ' ') {
+    for (char i : text) {
+        if (i == '.' || i == '-') {
+            morse_char += i;
+        } else if (i == ' ') {
             if (!morse_char.empty()) {
                 decipher_text += morse_decipher[morse_char];
                 morse_char = "";
@@ -814,7 +853,7 @@ void morse_code_decipher(const string& text) {
         decipher_text += morse_decipher[morse_char];
     }
 
-    cout << decipher_text << endl;
+    cout << decipher_text << endl << endl;
 }
 
 
@@ -823,10 +862,10 @@ void rail_Fence_Encrypt(const string& message) {
     // set main variables
     string clear_text = message,text, key, encryptedText;
     int num;
-    // this loop to clear text from any thing not letters before start
-    for (int i = 0; i < clear_text.length(); ++i) {
-        if (isalpha(clear_text[i])){
-            text += clear_text[i] ;
+    // this loop to clear text from non-alphabetic letters before start
+    for (char i : clear_text) {
+        if (isalpha(i)){
+            text += i ;
         }
     }
     // print welcome message
@@ -934,10 +973,10 @@ void rail_Fence_Decrypt(const string& message) {
     // set main variables
     string clear_text = message,text, key, decryptedText;
     int num;
-    // this loop to clear text from any thing not letters before start
-    for (int i = 0; i < clear_text.length(); ++i) {
-        if (isalpha(clear_text[i])){
-            text += clear_text[i] ;
+    // this loop to remove non-alphabetic letters from text before start
+    for (char i : clear_text) {
+        if (isalpha(i)){
+            text += i ;
         }
     }
     // print welcome message
@@ -1010,21 +1049,22 @@ void rail_Fence_Decrypt(const string& message) {
             }
         }
         // print the result
-        cout << "Decrypt text is :  " << decryptedText << endl ;
+        cout << "Decrypt text is :  " << decryptedText << endl << endl;
     }
 }
 
 
 // Simple substitution Cipher
 string lower_case(string key){
-    for (int i = 0; i < key.length(); i++){
-        key[i] = tolower(key[i]);
+    for (char & i : key){
+        i = tolower(i);
     }
     return key;
 }
 
 
-bool simpleSub_Key_Validity(string key){ // check the validity of the simple substitution key.
+bool simpleSub_Key_Validity(const string& key){
+    // check the validity of the simple substitution key.
     for (char i : key) {
         if (!isalpha(i))return false;
     }
@@ -1032,12 +1072,13 @@ bool simpleSub_Key_Validity(string key){ // check the validity of the simple sub
 }
 
 
-string complete_simple_sub_Key(string key){ // complete the key of the simple substitution cipher if needed.
+string complete_simple_sub_Key(string key){
+    // complete the key of the simple substitution cipher if needed.
     string alpha = "abcdefghijklmnoprqstuvwxyz";
     int letterIndex;
-    for (int i = 0; i < key.length(); ++i) {
-        // iterate on the given key and remove it from the alpha.
-        letterIndex = alpha.find(tolower(key[i]));
+    for (char i : key) {
+        // iterate through the given key and remove it from the alpha.
+        letterIndex = alpha.find(tolower(i));
         alpha.erase(alpha.begin()+letterIndex);
     }
     // add the remaining alpha to the key.
@@ -1046,71 +1087,83 @@ string complete_simple_sub_Key(string key){ // complete the key of the simple su
 }
 
 
-void simple_sub_encryption(string textToEncrypt){
-    cout << "welcome to the simple substitution encryption, in order to get your text encrypted you need to enter a secret key" << endl;
-    cout << "the key is any sequence of alphapetic characters(maximum 25 character)" << endl;
-    string key, encryptedText = "";
+void simple_sub_encryption(const string& textToEncrypt){
+    // Welcome message with explanation
+    cout << "Welcome to the simple substitution encryption, in order to get your text encrypted you need to enter a secret key" << endl;
+    cout << "the key is any sequence of alphabetic characters (maximum 25 character)" << endl;
+    string key, encryptedText;
+    encryptedText = "";
     string alpha = "abcdefghijklmnoprqstuvwxyz";
     int encryptionIndex;
+
     cout << "please enter a secret key: ";
     cin >> key;
     key = lower_case(key);
-    while (!(simpleSub_Key_Validity)){
+
+    // Checking validity
+    while (!(simpleSub_Key_Validity(key))){
         cout << "please enter a valid key" << endl;
         cin >> key;
     }
+
     if (simpleSub_Key_Validity(key)) {
         if (key.length() < 25) {
             key = complete_simple_sub_Key(key);
         }
-        for (int i = 0; i < textToEncrypt.length(); ++i) {
-            if (isalpha(textToEncrypt[i])){
-                encryptionIndex = alpha.find(tolower(textToEncrypt[i]));
+        for (char i : textToEncrypt) {
+            if (isalpha(i)){
+                encryptionIndex = alpha.find(tolower(i));
                 encryptedText += key[encryptionIndex];
             }
             else{
-                encryptedText += textToEncrypt[i];
+                encryptedText += i;
             }
-
         }
     }
-    cout << encryptedText << endl;
+    cout << encryptedText << endl << endl;
 }
 
 
-void simple_sub_decryption(string textToDecrypt){
+void simple_sub_decryption(const string& textToDecrypt){
+    // Welcome message with explanation
     cout << "welcome to the simple substitution decryption, in order to get your text decrypted you need to enter the secret key" << endl;
-    cout << "the key is any sequence of alphapetic characters(maximum 25 character)" << endl;
-    string key, encryptedText = "";
+    cout << "the key is any sequence of alphabetic characters (maximum 25 character)" << endl;
+    string key, encryptedText;
+    encryptedText = "";
     string alpha = "abcdefghijklmnoprqstuvwxyz";
     int decryptionIndex;
+
     cout << "please enter the secret key: ";
     cin >> key;
     key = lower_case(key);
-    while (!(simpleSub_Key_Validity)){
+
+    while (!(simpleSub_Key_Validity(key))){
         cout << "please enter a valid key" << endl;
         cin >> key;
     }
+
     if (simpleSub_Key_Validity(key)) {
         if (key.length() < 25) {
             key = complete_simple_sub_Key(key);
         }
-        for (int i = 0; i < textToDecrypt.length(); ++i) {
-            if (isalpha(textToDecrypt[i])){
-                decryptionIndex = key.find(tolower(textToDecrypt[i]));
+        for (char i : textToDecrypt) {
+            if (isalpha(i)){
+                decryptionIndex = key.find(tolower(i));
                 encryptedText += alpha[decryptionIndex];
             }
             else{
-                encryptedText += textToDecrypt[i];
+                encryptedText += i;
             }
 
         }
     }
-    cout << encryptedText << endl;
+    cout << encryptedText << endl << endl;
 }
 
+
 // Atbash Cipher
-bool atbash_key_validity(string key){ // check the validity of the atbash key.
+bool atbash_key_validity(const string& key){
+    // Checking the validity of the atbash key.
     if((key == "2") or (key == "4")) return true;
     return false;
 }
@@ -1118,9 +1171,11 @@ bool atbash_key_validity(string key){ // check the validity of the atbash key.
 
 void atbash_encryption(string textToEncrypt){
     // explain the cipher to the user.
-    cout << "welcom to atbash encryption, in order to get some text encrypted you need to enter a secret key" << endl;
+    cout << "Welcome to atbash encryption, in order to get some text encrypted you need to enter a secret key" << endl;
     cout << "valid keys are (2, 4)" << endl;
-    string key, encryptedText = "";
+    string key, encryptedText;
+    encryptedText = "";
+
     cout << "please enter a secret key: ";
     cin >> key; // get the key form user.
 
@@ -1131,20 +1186,20 @@ void atbash_encryption(string textToEncrypt){
 
     if (key == "2"){ // if the key is "2", split the alphabet to two halfs.
         string firstAlpha = "ABCDEFGHIJKLM", secondAlpha = "ZYXWVUTSRQPON";
-        for (int i = 0; i < textToEncrypt.length(); i++){ // iterate through each character of the text.
-            if (isalpha(textToEncrypt[i])){ // if the character is alpha search for it in one of the halfs and get its index.
-                if (int(toupper(textToEncrypt[i])) <= 77){
-                    int letterIndex = firstAlpha.find(toupper(textToEncrypt[i]));
+        for (char i : textToEncrypt){ // iterate through each character of the text.
+            if (isalpha(i)){ // if the character is alpha search for it in one of the halfs and get its index.
+                if (int(toupper(i)) <= 77){
+                    int letterIndex = firstAlpha.find(toupper(i));
                     // add the same index from the other half.
                     encryptedText += secondAlpha[letterIndex];
                 }
                 else{
-                    int letterIndex = secondAlpha.find(toupper(textToEncrypt[i]));
+                    int letterIndex = secondAlpha.find(toupper(i));
                     encryptedText += firstAlpha[letterIndex];
                 }
             }
             else{// if the character is not alpha leave it as it is.
-                encryptedText += textToEncrypt[i];
+                encryptedText += i;
             }
         }
 
@@ -1180,15 +1235,17 @@ void atbash_encryption(string textToEncrypt){
         }
 
     }
-    cout << encryptedText << endl;
+    cout << encryptedText << endl << endl;
 }
 
 
 void atbash_decryption(string textToEncrypt){
     // this is the same as the encryption function, but the printed messages are diffrent.
-    cout << "welcom to atbash decryption, in order to get some text decrypted you need to enter the secret key" << endl;
+    cout << "Welcome to atbash decryption, in order to get some text decrypted you need to enter the secret key" << endl;
     cout << "valid keys are (2, 4)" << endl;
-    string key, decryptedText = "";
+    string key, decryptedText;
+    decryptedText = "";
+
     cout << "please enter a secret key: ";
     cin >> key;
 
@@ -1199,20 +1256,20 @@ void atbash_decryption(string textToEncrypt){
 
     if (key == "2"){
         string firstAlpha = "ABCDEFGHIJKLM", secondAlpha = "ZYXWVUTSRQPON";
-        for (int i = 0; i < textToEncrypt.length(); i++){
-            if (isalpha(textToEncrypt[i])){
-                if (int(toupper(textToEncrypt[i])) <= 77){
-                    int letterIndex = firstAlpha.find(toupper(textToEncrypt[i]));
+        for (char i : textToEncrypt){
+            if (isalpha(i)){
+                if (int(toupper(i)) <= 77){
+                    int letterIndex = firstAlpha.find(toupper(i));
                     decryptedText += secondAlpha[letterIndex];
                 }
                 else
                 {
-                    int letterIndex = secondAlpha.find(toupper(textToEncrypt[i]));
+                    int letterIndex = secondAlpha.find(toupper(i));
                     decryptedText += firstAlpha[letterIndex];
                 }
             }
             else{
-                decryptedText += textToEncrypt[i];
+                decryptedText += i;
             }
         }
 
@@ -1247,7 +1304,7 @@ void atbash_decryption(string textToEncrypt){
         }
 
     }
-    cout << decryptedText << endl;
+    cout << decryptedText << endl << endl;
 }
 
 
@@ -1283,7 +1340,7 @@ int main() {
             cout << "2- Route cipher" << endl;
             cout << "3- Rail-fence cipher" << endl;
             cout << "4- Simple substitution cipher" << endl;
-            cout << "5- Atbah cipher" << endl;
+            cout << "5- Atbash cipher" << endl;
             cout << "7- Morse code cipher" << endl;
             cout << "8- XOR cipher" << endl;
             cout << "9- Vignere cipher" << endl;
@@ -1335,7 +1392,7 @@ int main() {
                 }
 
                 else{
-                    cout << "Please enter a valid choice" << endl;
+                    cout << "Please enter a valid choice" << endl << endl;
                     break;
                 }
             }
@@ -1404,13 +1461,13 @@ int main() {
                     break;
                 }
                 else{
-                    cout << "Please enter a valid choice" << endl;
+                    cout << "Please enter a valid choice" << endl << endl;
                     break;
                 }
             }
         }
         else{
-            cout << "Invalid choice." << endl;
+            cout << "Invalid choice." << endl << endl;
         }
     }
 }
