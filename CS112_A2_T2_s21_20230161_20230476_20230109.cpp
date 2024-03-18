@@ -21,6 +21,13 @@ Rail fence Cipher --------------------> John Ayman Demian
 #include <map>
 using namespace std;
 
+string lower_case(string key){
+    for (int i = 0; i < key.length(); i++){
+        key[i] = tolower(key[i]);
+    }
+    return key;
+}
+
 
 int route_key_validity(){ // to make sure that the secret key of the route cipher is valid.
     int secretKey;
@@ -174,7 +181,7 @@ bool poly_decrypted_validity(string & encrypted){
 }
 
 
-bool simpleSub_Key_Validity(string key){
+bool simpleSub_Key_Validity(string key){ // check the validity of the simple substitution key.
     for (char i : key) {
         if (!isalpha(i))return false;
     }
@@ -182,19 +189,21 @@ bool simpleSub_Key_Validity(string key){
 }
 
 
-bool atbash_key_validity(string key){
+bool atbash_key_validity(string key){ // check the validity of the atbash key.
     if((key == "2") or (key == "4")) return true;
     return false;
 }
 
 
-string complete_simple_sub_Key(string key){
+string complete_simple_sub_Key(string key){ // complete the key of the simple substitution cipher if needed.
     string alpha = "abcdefghijklmnoprqstuvwxyz";
     int letterIndex;
     for (int i = 0; i < key.length(); ++i) {
+        // iterate on the given key and remove it from the alpha.
         letterIndex = alpha.find(tolower(key[i]));
         alpha.erase(alpha.begin()+letterIndex);
     }
+    // add the remaining alpha to the key.
     key += alpha;
     return key;
 }
@@ -707,6 +716,7 @@ void simple_sub_encryption(string textToEncrypt){
     int encryptionIndex;
     cout << "please enter a secret key: ";
     cin >> key;
+    key = lower_case(key);
     while (!(simpleSub_Key_Validity)){
         cout << "please enter a valid key" << endl;
         cin >> key;
@@ -717,7 +727,7 @@ void simple_sub_encryption(string textToEncrypt){
         }
         for (int i = 0; i < textToEncrypt.length(); ++i) {
             if (isalpha(textToEncrypt[i])){
-                encryptionIndex = alpha.find(textToEncrypt[i]);
+                encryptionIndex = alpha.find(tolower(textToEncrypt[i]));
                 encryptedText += key[encryptionIndex];
             }
             else{
@@ -738,6 +748,7 @@ void simple_sub_decryption(string textToDecrypt){
     int decryptionIndex;
     cout << "please enter the secret key: ";
     cin >> key;
+    key = lower_case(key);
     while (!(simpleSub_Key_Validity)){
         cout << "please enter a valid key" << endl;
         cin >> key;
@@ -748,7 +759,7 @@ void simple_sub_decryption(string textToDecrypt){
         }
         for (int i = 0; i < textToDecrypt.length(); ++i) {
             if (isalpha(textToDecrypt[i])){
-                decryptionIndex = key.find(textToDecrypt[i]);
+                decryptionIndex = key.find(tolower(textToDecrypt[i]));
                 encryptedText += alpha[decryptionIndex];
             }
             else{
