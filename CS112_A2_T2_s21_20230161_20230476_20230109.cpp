@@ -181,6 +181,12 @@ bool simpleSub_Key_Validity(string key){
 }
 
 
+bool atbash_key_validity(string key){
+    if((key == "2") or (key == "4")) return true;
+    return false;
+}
+
+
 string completeKey(string key){
     string alpha = "abcdefghijklmnoprqstuvwxyz";
     int letterIndex;
@@ -678,6 +684,138 @@ void simple_sub_decryption(string textToDecrypt){
 }
 
 
+void atbash_encryption(string textToEncrypt){
+    cout << "welcom to atbash encryption, in order to get some text encrypted you need to enter a secret key" << endl;
+    cout << "valid keys are (2, 4)" << endl;
+    string key, encryptedText = "";
+    cout << "please enter a secret key: ";
+    cin >> key;
+
+    while (!atbash_key_validity(key)){
+        cout << "please enter a valid key" << endl;
+        cin >> key;
+    }
+
+    if (key == "2"){
+        string firstAlpha = "ABCDEFGHIJKLM", secondAlpha = "ZYXWVUTSRQPON";
+        for (int i = 0; i < textToEncrypt.length(); i++){
+            if (isalpha(textToEncrypt[i])){
+                if (int(toupper(textToEncrypt[i])) <= 77){
+                    int letterIndex = firstAlpha.find(toupper(textToEncrypt[i]));
+                    encryptedText += secondAlpha[letterIndex];
+                }
+                else
+                {
+                    int letterIndex = secondAlpha.find(toupper(textToEncrypt[i]));
+                    encryptedText += firstAlpha[letterIndex];
+                }
+            }
+            else{
+                encryptedText += textToEncrypt[i];
+            }
+        }
+
+    }
+    else if (key == "4"){
+        string firstAlpha = "ABCDEF", secondAlpha = "MLKJIH", thirdAlpha = "NOPQRS", fourthAlpha = "ZYXWVU";
+        for (int i = 0; i < textToEncrypt.length(); i++){
+            if (isalpha(textToEncrypt[i])){
+                if (int(toupper(textToEncrypt[i])) > 84){
+                    int letterIndex = fourthAlpha.find(toupper(textToEncrypt[i]));
+                    encryptedText += thirdAlpha[letterIndex];
+                }
+                else if (int(toupper(textToEncrypt[i])) == 84){
+                    encryptedText += "T";
+                }
+                else if (int(toupper(textToEncrypt[i])) > 77){
+                    int letterIndex = thirdAlpha.find(toupper(textToEncrypt[i]));
+                    encryptedText += fourthAlpha[letterIndex];
+                }
+                else if (int(toupper(textToEncrypt[i])) > 71){
+                    int letterIndex = secondAlpha.find(toupper(textToEncrypt[i]));
+                    encryptedText += firstAlpha[letterIndex];
+                }
+                else if (int(toupper(textToEncrypt[i])) == 71){
+                    encryptedText += "G";
+                }
+                else{
+                    int letterIndex = firstAlpha.find(toupper(textToEncrypt[i]));
+                    encryptedText += secondAlpha[i];
+                }
+            }
+        }
+
+    }
+    cout << encryptedText << endl;
+}
+
+
+void atbash_decryption(string textToEncrypt){
+    cout << "welcom to atbash decryption, in order to get some text decrypted you need to enter the secret key" << endl;
+    cout << "valid keys are (2, 4)" << endl;
+    string key, decryptedText = "";
+    cout << "please enter a secret key: ";
+    cin >> key;
+
+    while (!atbash_key_validity(key)){
+        cout << "please enter a valid key" << endl;
+        cin >> key;
+    }
+
+    if (key == "2"){
+        string firstAlpha = "ABCDEFGHIJKLM", secondAlpha = "ZYXWVUTSRQPON";
+        for (int i = 0; i < textToEncrypt.length(); i++){
+            if (isalpha(textToEncrypt[i])){
+                if (int(toupper(textToEncrypt[i])) <= 77){
+                    int letterIndex = firstAlpha.find(toupper(textToEncrypt[i]));
+                    decryptedText += secondAlpha[letterIndex];
+                }
+                else
+                {
+                    int letterIndex = secondAlpha.find(toupper(textToEncrypt[i]));
+                    decryptedText += firstAlpha[letterIndex];
+                }
+            }
+            else{
+                decryptedText += textToEncrypt[i];
+            }
+        }
+
+    }
+    else if (key == "4"){
+        string firstAlpha = "ABCDEF", secondAlpha = "MLKJIH", thirdAlpha = "NOPQRS", fourthAlpha = "ZYXWVU";
+        for (int i = 0; i < textToEncrypt.length(); i++){
+            if (isalpha(textToEncrypt[i])){
+                if (int(toupper(textToEncrypt[i])) > 84){
+                    int letterIndex = fourthAlpha.find(toupper(textToEncrypt[i]));
+                    decryptedText += thirdAlpha[letterIndex];
+                }
+                else if (int(toupper(textToEncrypt[i])) == 84){
+                    decryptedText += "T";
+                }
+                else if (int(toupper(textToEncrypt[i])) > 77){
+                    int letterIndex = thirdAlpha.find(toupper(textToEncrypt[i]));
+                    decryptedText += fourthAlpha[letterIndex];
+                }
+                else if (int(toupper(textToEncrypt[i])) > 71){
+                    int letterIndex = secondAlpha.find(toupper(textToEncrypt[i]));
+                    decryptedText += firstAlpha[letterIndex];
+                }
+                else if (int(toupper(textToEncrypt[i])) == 71){
+                    decryptedText += "G";
+                }
+                else{
+                    int letterIndex = firstAlpha.find(toupper(textToEncrypt[i]));
+                    decryptedText += secondAlpha[i];
+                }
+            }
+        }
+
+    }
+    cout << decryptedText << endl;
+}
+
+
 int main() {
     string message, encrypted;
     cout << "Ahlan ya user ya habibi." << endl;
@@ -709,6 +847,7 @@ int main() {
             cout << "2- Route cipher" << endl;
             cout << "3- Rail-fence cipher" << endl;
             cout << "4- simple substitution cipher" << endl;
+            cout << "5- Atbah cipher" << endl;
             cout << "->";
 
             string cipherChoice;
@@ -735,6 +874,11 @@ int main() {
                     break;
                 }
 
+                else if (cipherChoice == "5"){
+                    atbash_encryption(message);
+                    break;
+                }
+
 
                 else{
                     cout << "Please enter a valid choice" << endl;
@@ -756,6 +900,7 @@ int main() {
             cout << "2- Route cipher" << endl;
             cout << "3- Rail-fence cipher" << endl;
             cout << "4- simple substitution cipher" << endl;
+            cout << "5- Atbash cipher" << endl;
             cout << "->";
 
             string cipher_choice;
@@ -778,6 +923,12 @@ int main() {
                     simple_sub_decryption(encrypted);
                     break;
                 }
+
+                else if (cipher_choice == "5"){
+                    atbash_decryption(encrypted);
+                    break;
+                }
+
 
                 else{
                     cout << "Please enter a valid choice" << endl;
