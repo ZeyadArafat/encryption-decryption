@@ -41,17 +41,14 @@ string strip(const string& sentence){
     return strippedSentence;
 }
 
-<<<<<<< HEAD
- // Baconian Cipher
+// Baconian Cipher
 void baconian_encryption(string textToEncrypt){
     string encryptedText = "";
     map<char, string> encryptionMap = {
-        {'A', "aaaaa"}, {'B', "aaaab"}, {'c', "aaaba"}, {'D', "aaabb"}, {'E', "aabaa"}, {'F', "aabab"}, {'G', "aabba"},
-        {'H', "aabbb"}, {'I', "abaaa"}, {'J', "abaab"}, {'k', "ababa"}, {'L', "ababb"}, {'M', "abbaa"}, {'N', "abbab"},
-        {'O', "abbba"}, {'P', "abbbb"}, {'Q', "baaaa"}, {'R', "baaab"}, {'S', "baaba"}, {'T', "baabb"}, {'U', "babaa"},
-        {'V', "babab"}, {'W', "babba"}, {'X', "babbb"}, {'Y', "bbaaa"}, {'Z', "bbaab"}};
-
-    getline(cin, textToEncrypt);
+            {'A', "aaaaa"}, {'B', "aaaab"}, {'c', "aaaba"}, {'D', "aaabb"}, {'E', "aabaa"}, {'F', "aabab"}, {'G', "aabba"},
+            {'H', "aabbb"}, {'I', "abaaa"}, {'J', "abaab"}, {'k', "ababa"}, {'L', "ababb"}, {'M', "abbaa"}, {'N', "abbab"},
+            {'O', "abbba"}, {'P', "abbbb"}, {'Q', "baaaa"}, {'R', "baaab"}, {'S', "baaba"}, {'T', "baabb"}, {'U', "babaa"},
+            {'V', "babab"}, {'W', "babba"}, {'X', "babbb"}, {'Y', "bbaaa"}, {'Z', "bbaab"}};
     for (int i = 0; i < textToEncrypt.length(); i++){
         if (isalpha(textToEncrypt[i])){
             encryptedText += encryptionMap[toupper(textToEncrypt[i])];
@@ -61,17 +58,17 @@ void baconian_encryption(string textToEncrypt){
         }
 
     }
-    cout << encryptedText;
+    cout << encryptedText << endl;
 }
 
 
 void baconian_decryption(string textToDecrypt){
     string decryptedText = "", code = "";
     map<string, string > decryptionMap = {
-        {"aaaaa", "A"}, {"aaaab", "B"}, {"aaaba", "C"}, {"aaabb", "D"}, {"aabaa", "E"}, {"aabab", "F"}, {"aabba", "G"},
-        {"aabbb", "H"}, {"abaaa", "I"}, {"abaab", "J"}, {"ababa", "K"}, {"ababb", "L"}, {"abbaa", "M"}, {"abbab", "N"},
-        {"abbba", "O"}, {"abbbb", "P"}, {"baaaa", "Q"}, {"baaab", "R"}, {"baaba", "S"}, {"baabb", "T"}, {"babaa", "U"},
-        {"babab", "V"}, {"babba", "V"}, {"babbb", "X"}, {"bbaaa", "Y"}, {"bbaab", "Z"}};
+            {"aaaaa", "A"}, {"aaaab", "B"}, {"aaaba", "C"}, {"aaabb", "D"}, {"aabaa", "E"}, {"aabab", "F"}, {"aabba", "G"},
+            {"aabbb", "H"}, {"abaaa", "I"}, {"abaab", "J"}, {"ababa", "K"}, {"ababb", "L"}, {"abbaa", "M"}, {"abbab", "N"},
+            {"abbba", "O"}, {"abbbb", "P"}, {"baaaa", "Q"}, {"baaab", "R"}, {"baaba", "S"}, {"baabb", "T"}, {"babaa", "U"},
+            {"babab", "V"}, {"babba", "V"}, {"babbb", "X"}, {"bbaaa", "Y"}, {"bbaab", "Z"}};
     for (int i = 0; i < textToDecrypt.length(); i++){
         if (isalpha(textToDecrypt[i])){
             code += textToDecrypt[i];
@@ -88,9 +85,6 @@ void baconian_decryption(string textToDecrypt){
     }
     cout << decryptedText << endl;
 }
-
-=======
->>>>>>> 2fdc9b8888bd157db92252bd7c6563fb324d087c
 
 // XOR Cipher
 bool isHexa(string message){
@@ -1444,7 +1438,7 @@ int main() {
                     break;
                 }
                 else if (cipherChoice == "4"){
-
+                    baconian_encryption(message);
                     break;
                 }
                 else if (cipherChoice == "5"){
@@ -1516,7 +1510,7 @@ int main() {
                     break;
                 }
                 else if (cipher_choice == "4"){
-
+                    baconian_decryption(encrypted);
                     break;
                 }
                 else if (cipher_choice == "5"){
