@@ -49,7 +49,7 @@ void baconian_encryption(string textToEncrypt){
             {'H', "aabbb"}, {'I', "abaaa"}, {'J', "abaab"}, {'K', "ababa"}, {'L', "ababb"}, {'M', "abbaa"}, {'N', "abbab"},
             {'O', "abbba"}, {'P', "abbbb"}, {'Q', "baaaa"}, {'R', "baaab"}, {'S', "baaba"}, {'T', "baabb"}, {'U', "babaa"},
             {'V', "babab"}, {'W', "babba"}, {'X', "babbb"}, {'Y', "bbaaa"}, {'Z', "bbaab"}};
-    
+
     for (int i = 0; i < textToEncrypt.length(); i++){
         if (isalpha(textToEncrypt[i])){
             // Append the Baconian code for the corresponding uppercase letter to the encrypted text
@@ -73,7 +73,7 @@ void baconian_decryption(string textToDecrypt){
             {"aabbb", "H"}, {"abaaa", "I"}, {"abaab", "J"}, {"ababa", "K"}, {"ababb", "L"}, {"abbaa", "M"}, {"abbab", "N"},
             {"abbba", "O"}, {"abbbb", "P"}, {"baaaa", "Q"}, {"baaab", "R"}, {"baaba", "S"}, {"baabb", "T"}, {"babaa", "U"},
             {"babab", "V"}, {"babba", "V"}, {"babbb", "X"}, {"bbaaa", "Y"}, {"bbaab", "Z"}};
-    
+
     for (int i = 0; i < textToDecrypt.length(); i++){
         if (isalpha(textToDecrypt[i])){
             // Append the character to the code
@@ -882,7 +882,6 @@ void morse_code_cipher(const string& text) {
         } else if (i == ' ') {
             // Add a space to the clear_text directly
             clear_text += " ";
-            // print invalid input
         }
     }
     // collect char
@@ -896,11 +895,22 @@ void morse_code_cipher(const string& text) {
         }
     }
     // print result
-    cout <<"ciphered text : " <<cipher_text << endl << endl;
+    if (cipher_text == ""){
+        cout << "The entered text contains only special charcters can not ciphered ,pls enter letters or numbers. "<< endl << endl;
+    } else
+
+        cout <<"ciphered text : " <<cipher_text << endl << endl;
 }
 
-
 void morse_code_decipher(const string& text) {
+    bool valid_input = all_of(text.begin(), text.end(), [](char c) {
+        return  c == ' ' || c == '.' || c == '-';
+    });
+
+    if (!valid_input) {
+        cout << "Input text not contains spaces, periods, or hyphens. Encryption cannot be performed." << endl;
+        return;
+    }
     // set the morse table
     map<string, char> morse_decipher = {
             {".-", 'a'}, {"-...", 'b'}, {"-.-.", 'c'}, {"-..", 'd'}, {".", 'e'},
@@ -926,11 +936,6 @@ void morse_code_decipher(const string& text) {
             } else {
                 decipher_text += " "; // Add space for word separation
             }
-        } else {
-            // if input is valid
-            cout<< "Invalid Morse code character detected. Please enter valid Morse code (dots, dashes, and spaces only): ";
-            break;
-
         }
     }
     // check all char converted
@@ -944,6 +949,14 @@ void morse_code_decipher(const string& text) {
 
 // Rail fence Cipher
 void rail_Fence_Encrypt(const string& message) {
+    // check validation of the entered text contain letters to cipher and ignore others
+    int letter_count = count_if(message.begin(), message.end(), [](char c) {
+        return isalpha(c);
+    });
+    if (letter_count == 0) {
+        cout << "Input text must contain at least one letter. Encryption cannot be performed." << endl;
+        return;
+    }
     // set main variables
     string clear_text = message,text, key, encryptedText;
     int num;
@@ -1067,7 +1080,7 @@ void rail_Fence_Decrypt(const string& message) {
     // print welcome message
     cout << "welcome to Rail Fence encrypt program " << endl;
     // let user choose the key
-    cout << "please choose the key 3 or 4 :  " ;
+    cout << "please choose the key 3 or 4: " ;
     cin.ignore();
     getline(cin , key ) ;
 
@@ -1104,7 +1117,10 @@ void rail_Fence_Decrypt(const string& message) {
             }
         }
         // print the result
-        cout << "Decrypt text is :  " << decryptedText << endl ;
+        if (decryptedText == ""){
+            cout <<"The encrypted text you entered not contains any letter to be deciphered,pls enter valid text " << endl << endl ;
+        } else
+            cout << "Decrypt text is :  " << decryptedText << endl ;
     }
     else if (num == 4) {
         int len = text.length();
@@ -1134,7 +1150,10 @@ void rail_Fence_Decrypt(const string& message) {
             }
         }
         // print the result
-        cout << "Decrypt text is :  " << decryptedText << endl << endl;
+        if (decryptedText == ""){
+            cout << "The encrypted text you entered not contains any letter to be deciphered , pls enter valid text : " << endl << endl ;
+        } else
+            cout << "Decrypt text is :  " << decryptedText << endl ;
     }
 }
 
@@ -1454,7 +1473,7 @@ int main() {
                     encryptAffineCipher(message);
                     break;
                 }
-                else if (cipherChoice == "1"){     
+                else if (cipherChoice == "1"){
                     route_cipher_encryption(message);
                     break;
                 }
@@ -1474,7 +1493,7 @@ int main() {
                     simple_sub_encryption(message);
                     break;
                 }
-                else if (cipherChoice == "6"){          
+                else if (cipherChoice == "6"){
                     polybius_square_encryption(message);
                     break;
                 }
@@ -1486,7 +1505,7 @@ int main() {
                     xor_encryption(message);
                     break;
                 }
-                else if (cipherChoice == "9"){      
+                else if (cipherChoice == "9"){
                     rail_Fence_Encrypt(message);
                     break;
                 }
@@ -1526,7 +1545,7 @@ int main() {
                     decryptAffineCipher(encrypted);
                     break;
                 }
-                else if (cipher_choice == "1"){      
+                else if (cipher_choice == "1"){
                     route_cipher_decryption(encrypted);
                     break;
                 }
@@ -1546,7 +1565,7 @@ int main() {
                     simple_sub_decryption(encrypted);
                     break;
                 }
-                else if (cipher_choice == "6"){           
+                else if (cipher_choice == "6"){
                     polybius_square_decryption(encrypted);
                     break;
                 }
@@ -1558,7 +1577,7 @@ int main() {
                     xor_decryption(encrypted);
                     break;
                 }
-                else if (cipher_choice == "9"){      
+                else if (cipher_choice == "9"){
                     rail_Fence_Decrypt(encrypted);
                     break;
                 }
