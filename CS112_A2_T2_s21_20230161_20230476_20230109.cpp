@@ -46,10 +46,10 @@ string strip(const string& sentence){
 void baconian_encryption(string textToEncrypt){
     string encryptedText = "";
     map<char, string> encryptionMap = {
-        {'A', "aaaaa"}, {'B', "aaaab"}, {'C', "aaaba"}, {'D', "aaabb"}, {'E', "aabaa"}, {'F', "aabab"}, {'G', "aabba"},
-        {'H', "aabbb"}, {'I', "abaaa"}, {'J', "abaab"}, {'K', "ababa"}, {'L', "ababb"}, {'M', "abbaa"}, {'N', "abbab"},
-        {'O', "abbba"}, {'P', "abbbb"}, {'Q', "baaaa"}, {'R', "baaab"}, {'S', "baaba"}, {'T', "baabb"}, {'U', "babaa"},
-        {'V', "babab"}, {'W', "babba"}, {'X', "babbb"}, {'Y', "bbaaa"}, {'Z', "bbaab"}};
+            {'A', "aaaaa"}, {'B', "aaaab"}, {'C', "aaaba"}, {'D', "aaabb"}, {'E', "aabaa"}, {'F', "aabab"}, {'G', "aabba"},
+            {'H', "aabbb"}, {'I', "abaaa"}, {'J', "abaab"}, {'K', "ababa"}, {'L', "ababb"}, {'M', "abbaa"}, {'N', "abbab"},
+            {'O', "abbba"}, {'P', "abbbb"}, {'Q', "baaaa"}, {'R', "baaab"}, {'S', "baaba"}, {'T', "baabb"}, {'U', "babaa"},
+            {'V', "babab"}, {'W', "babba"}, {'X', "babbb"}, {'Y', "bbaaa"}, {'Z', "bbaab"}};
     for (int i = 0; i < textToEncrypt.length(); i++){
         if (isalpha(textToEncrypt[i])){
             encryptedText += encryptionMap[toupper(textToEncrypt[i])];
@@ -66,10 +66,10 @@ void baconian_encryption(string textToEncrypt){
 void baconian_decryption(string textToDecrypt){
     string decryptedText = "", code = "";
     map<string, string > decryptionMap = {
-        {"aaaaa", "A"}, {"aaaab", "B"}, {"aaaba", "C"}, {"aaabb", "D"}, {"aabaa", "E"}, {"aabab", "F"}, {"aabba", "G"},
-        {"aabbb", "H"}, {"abaaa", "I"}, {"abaab", "J"}, {"ababa", "K"}, {"ababb", "L"}, {"abbaa", "M"}, {"abbab", "N"},
-        {"abbba", "O"}, {"abbbb", "P"}, {"baaaa", "Q"}, {"baaab", "R"}, {"baaba", "S"}, {"baabb", "T"}, {"babaa", "U"},
-        {"babab", "V"}, {"babba", "V"}, {"babbb", "X"}, {"bbaaa", "Y"}, {"bbaab", "Z"}};
+            {"aaaaa", "A"}, {"aaaab", "B"}, {"aaaba", "C"}, {"aaabb", "D"}, {"aabaa", "E"}, {"aabab", "F"}, {"aabba", "G"},
+            {"aabbb", "H"}, {"abaaa", "I"}, {"abaab", "J"}, {"ababa", "K"}, {"ababb", "L"}, {"abbaa", "M"}, {"abbab", "N"},
+            {"abbba", "O"}, {"abbbb", "P"}, {"baaaa", "Q"}, {"baaab", "R"}, {"baaba", "S"}, {"baabb", "T"}, {"babaa", "U"},
+            {"babab", "V"}, {"babba", "V"}, {"babbb", "X"}, {"bbaaa", "Y"}, {"bbaab", "Z"}};
     for (int i = 0; i < textToDecrypt.length(); i++){
         if (isalpha(textToDecrypt[i])){
             code += textToDecrypt[i];
@@ -360,6 +360,12 @@ int modulo(int a, int b) {
 
 // Function to encrypt text using the Affine Cipher
 void encryptAffineCipher(const string& text) {
+    // Check if the input text contains only letters and spaces
+    bool valid_input = all_of(text.begin(), text.end(), [](char c) { return isalpha(c) || c == ' '; });
+    if (!valid_input) {
+        cout << "Input text contains non-letter characters other than spaces. Encryption cannot be performed." << endl;
+        return;
+    }
     // Map to store the affine characters
     map<char, int> affine_map = {
             {'a', 0}, {'b', 1}, {'c', 2}, {'d', 3}, {'e', 4},
@@ -399,6 +405,7 @@ void encryptAffineCipher(const string& text) {
             clear_text += tolower(i); // Convert to lowercase
         }
     }
+
     // Apply the affine cipher and build the cipher text
     for (char i : clear_text) {
         result = (a * affine_map[i] + b) % 26;
@@ -410,7 +417,14 @@ void encryptAffineCipher(const string& text) {
 
 // Function to decrypt text encrypted using the Affine Cipher
 void decryptAffineCipher(const string& text) {
-    // Map to store the affine characters
+    // Check if the input text contains only letters and spaces
+    bool valid_input = all_of(text.begin(), text.end(), [](char c) { return isalpha(c) || c == ' '; });
+    if (!valid_input) {
+        cout << "Input text contains non-letter characters other than spaces. Decryption cannot be performed." << endl;
+        return;
+    }
+
+    // Your existing code remains unchanged below this point
     map<char, int> affine_map = {
             {'a', 0}, {'b', 1}, {'c', 2}, {'d', 3}, {'e', 4},
             {'f', 5}, {'g', 6}, {'h', 7}, {'i', 8}, {'j', 9},
@@ -420,7 +434,6 @@ void decryptAffineCipher(const string& text) {
             {'z', 25}
     };
 
-    // Map to store the reverse mapping for decryption
     map<int, char> reverse_affine_map;
     for (const auto& pair : affine_map) {
         reverse_affine_map[pair.second] = pair.first;
@@ -429,32 +442,28 @@ void decryptAffineCipher(const string& text) {
     string clear_text, decipher_text;
     int b, c, result;
 
-    // Input loop for obtaining valid values of b and c
     while (true) {
         cout << "Enter (b, c): ";
         cin >> b >> c;
 
-        // Check if both b and c are positive integers
         if (b > 0 && c > 0) {
-            break; // Exit the loop if both are valid
+            break;
         } else {
             cout << "Please enter positive numbers only." << endl;
-            cin.clear(); // Clear error flags
-            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
         }
     }
 
-    // Process the input text
     for (char i : text) {
         if (isalpha(i)) {
-            clear_text += tolower(i); // Convert to lowercase
+            clear_text += tolower(i);
         }
     }
 
-    // Apply the affine cipher and build the deciphered text
     for (char i : clear_text) {
         result = modulo(c * (affine_map[i] - b), 26);
-        decipher_text += toupper(reverse_affine_map[result]); // Convert to uppercase
+        decipher_text += toupper(reverse_affine_map[result]);
     }
 
     cout << "Deciphered text: " << decipher_text << endl << endl;
@@ -868,10 +877,7 @@ void morse_code_cipher(const string& text) {
             // Add a space to the clear_text directly
             clear_text += " ";
             // print invalid input
-        } else{
-            cout << "Invalid Input , Try again " ;
-            break;
-        }
+        } 
     }
     // collect char
     for (char i : clear_text)
