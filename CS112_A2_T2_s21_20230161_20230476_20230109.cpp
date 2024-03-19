@@ -1300,11 +1300,15 @@ void atbash_encryption(string textToEncrypt){
                 else if (int(toupper(textToEncrypt[i])) == 71){
                     encryptedText += "G";
                 }
-                else{
+                else if (int(toupper(textToEncrypt[i])) < 71){
                     int letterIndex = firstAlpha.find(toupper(textToEncrypt[i]));
-                    encryptedText += secondAlpha[i];
+                    encryptedText += secondAlpha[letterIndex];
                 }
             }
+            else{
+                encryptedText += textToEncrypt[i];
+            }
+
         }
 
     }
@@ -1312,7 +1316,7 @@ void atbash_encryption(string textToEncrypt){
 }
 
 
-void atbash_decryption(string textToEncrypt){
+void atbash_decryption(string textToDecrypt){
     // this is the same as the encryption function, but the printed messages are diffrent.
     cout << "Welcome to atbash decryption, in order to get some text decrypted you need to enter the secret key" << endl;
     cout << "valid keys are (2, 4)" << endl;
@@ -1329,7 +1333,7 @@ void atbash_decryption(string textToEncrypt){
 
     if (key == "2"){
         string firstAlpha = "ABCDEFGHIJKLM", secondAlpha = "ZYXWVUTSRQPON";
-        for (char i : textToEncrypt){
+        for (char i : textToDecrypt){
             if (isalpha(i)){
                 if (int(toupper(i)) <= 77){
                     int letterIndex = firstAlpha.find(toupper(i));
@@ -1349,31 +1353,35 @@ void atbash_decryption(string textToEncrypt){
     }
     else if (key == "4"){
         string firstAlpha = "ABCDEF", secondAlpha = "MLKJIH", thirdAlpha = "NOPQRS", fourthAlpha = "ZYXWVU";
-        for (int i = 0; i < textToEncrypt.length(); i++){
-            if (isalpha(textToEncrypt[i])){
-                if (int(toupper(textToEncrypt[i])) > 84){
-                    int letterIndex = fourthAlpha.find(toupper(textToEncrypt[i]));
+        for (int i = 0; i < textToDecrypt.length(); i++){
+            if (isalpha(textToDecrypt[i])){
+                if (int(toupper(textToDecrypt[i])) > 84){
+                    int letterIndex = fourthAlpha.find(toupper(textToDecrypt[i]));
                     decryptedText += thirdAlpha[letterIndex];
                 }
-                else if (int(toupper(textToEncrypt[i])) == 84){
+                else if (int(toupper(textToDecrypt[i])) == 84){
                     decryptedText += "T";
                 }
-                else if (int(toupper(textToEncrypt[i])) > 77){
-                    int letterIndex = thirdAlpha.find(toupper(textToEncrypt[i]));
+                else if (int(toupper(textToDecrypt[i])) > 77){
+                    int letterIndex = thirdAlpha.find(toupper(textToDecrypt[i]));
                     decryptedText += fourthAlpha[letterIndex];
                 }
-                else if (int(toupper(textToEncrypt[i])) > 71){
-                    int letterIndex = secondAlpha.find(toupper(textToEncrypt[i]));
+                else if (int(toupper(textToDecrypt[i])) > 71){
+                    int letterIndex = secondAlpha.find(toupper(textToDecrypt[i]));
                     decryptedText += firstAlpha[letterIndex];
                 }
-                else if (int(toupper(textToEncrypt[i])) == 71){
+                else if (int(toupper(textToDecrypt[i])) == 71){
                     decryptedText += "G";
                 }
-                else{
-                    int letterIndex = firstAlpha.find(toupper(textToEncrypt[i]));
-                    decryptedText += secondAlpha[i];
+                else if (int(toupper(textToDecrypt[i])) < 71){
+                    int letterIndex = firstAlpha.find(toupper(textToDecrypt[i]));
+                    decryptedText += secondAlpha[letterIndex];
                 }
             }
+            else{
+                decryptedText += textToDecrypt[i];
+            }
+
         }
 
     }
