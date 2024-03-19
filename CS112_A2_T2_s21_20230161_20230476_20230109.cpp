@@ -45,33 +45,40 @@ string strip(const string& sentence){
 // Baconian Cipher
 void baconian_encryption(string textToEncrypt){
     string encryptedText = "";
+    // Store the Baconian cipher mappings for each letter
     map<char, string> encryptionMap = {
             {'A', "aaaaa"}, {'B', "aaaab"}, {'C', "aaaba"}, {'D', "aaabb"}, {'E', "aabaa"}, {'F', "aabab"}, {'G', "aabba"},
             {'H', "aabbb"}, {'I', "abaaa"}, {'J', "abaab"}, {'K', "ababa"}, {'L', "ababb"}, {'M', "abbaa"}, {'N', "abbab"},
             {'O', "abbba"}, {'P', "abbbb"}, {'Q', "baaaa"}, {'R', "baaab"}, {'S', "baaba"}, {'T', "baabb"}, {'U', "babaa"},
             {'V', "babab"}, {'W', "babba"}, {'X', "babbb"}, {'Y', "bbaaa"}, {'Z', "bbaab"}};
+    
     for (int i = 0; i < textToEncrypt.length(); i++){
         if (isalpha(textToEncrypt[i])){
+            // Append the Baconian code for the corresponding uppercase letter to the encrypted text
             encryptedText += encryptionMap[toupper(textToEncrypt[i])];
         }
         else{
+            // If the character is not an alphabet, append it to the encrypted text
             encryptedText += textToEncrypt[i];
         }
 
     }
-    cout << encryptedText << endl;
+    cout << encryptedText << endl << endl;
 }
 
 
 void baconian_decryption(string textToDecrypt){
     string decryptedText = "", code = "";
+    // Store the Baconian cipher mappings for each code
     map<string, string > decryptionMap = {
             {"aaaaa", "A"}, {"aaaab", "B"}, {"aaaba", "C"}, {"aaabb", "D"}, {"aabaa", "E"}, {"aabab", "F"}, {"aabba", "G"},
             {"aabbb", "H"}, {"abaaa", "I"}, {"abaab", "J"}, {"ababa", "K"}, {"ababb", "L"}, {"abbaa", "M"}, {"abbab", "N"},
             {"abbba", "O"}, {"abbbb", "P"}, {"baaaa", "Q"}, {"baaab", "R"}, {"baaba", "S"}, {"baabb", "T"}, {"babaa", "U"},
             {"babab", "V"}, {"babba", "V"}, {"babbb", "X"}, {"bbaaa", "Y"}, {"bbaab", "Z"}};
+    
     for (int i = 0; i < textToDecrypt.length(); i++){
         if (isalpha(textToDecrypt[i])){
+            // Append the character to the code
             code += textToDecrypt[i];
             if (code.length() % 5 == 0 ){
                 decryptedText += decryptionMap[code];
@@ -80,11 +87,12 @@ void baconian_decryption(string textToDecrypt){
 
         }
         else{
+            // If the character is not an alphabet, simply append it to the decrypted text
             decryptedText += textToDecrypt[i];
         }
 
     }
-    cout << decryptedText << endl;
+    cout << decryptedText << endl << endl;
 }
 
 
@@ -92,7 +100,7 @@ void baconian_decryption(string textToDecrypt){
 // XOR Cipher
 bool isHexa(string message){
     message = strip(message);
-    // Decrypted messages in hexa should only be length of an even number
+    // Decrypted messages in hexa should only be length of even numbers
     if (message.length() % 2 != 0){
         cout << "Invalid message, try again" << endl;
         cout << "->";
@@ -1187,14 +1195,18 @@ void simple_sub_encryption(const string& textToEncrypt){
 
     if (simpleSub_Key_Validity(key)) {
         if (key.length() < 25) {
+            // If key length is less than 25, complete the key with remaining alphabet characters
             key = complete_simple_sub_Key(key);
         }
         for (char i : textToEncrypt) {
             if (isalpha(i)){
+                // Find index of character in the alphabet
                 encryptionIndex = alpha.find(tolower(i));
+                // Encrypt the character using the key
                 encryptedText += key[encryptionIndex];
             }
             else{
+                // If character is not an alphabet, add it to the encrypted text
                 encryptedText += i;
             }
         }
@@ -1223,17 +1235,19 @@ void simple_sub_decryption(const string& textToDecrypt){
 
     if (simpleSub_Key_Validity(key)) {
         if (key.length() < 25) {
+            // If key length is less than 25, complete the key with remaining alphabet characters
             key = complete_simple_sub_Key(key);
         }
         for (char i : textToDecrypt) {
             if (isalpha(i)){
+                // Find index of character in the alphabet
                 decryptionIndex = key.find(tolower(i));
                 encryptedText += alpha[decryptionIndex];
             }
             else{
+                // If character is not an alphabet, add it to the encrypted text
                 encryptedText += i;
             }
-
         }
     }
     cout << encryptedText << endl << endl;
