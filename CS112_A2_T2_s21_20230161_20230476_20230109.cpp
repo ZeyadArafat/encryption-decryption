@@ -1,11 +1,12 @@
 /*
-File: CS112_A2_T4_21_20230161_20230109_20230476.cpp
-Purpose: This is a simple encryption and decryption program using 10 different ciphers.
-Last Modification Date: 19/3/2024.
-Authors:
-    Zeyad Mohamed Arafat - 20230161   s21   zeyadarafat833@gmail.com
-    John Ayman Demian    - 20230109   s21   johnayman03@gmail.com
-    Youssef Ahmed Beshir - 20230476   s21   youssefahmedbeshir@gmail.com
+FCAI - Structured Programming - 2024 - Assignment 2
+Program Name: Cipher
+program Description: This is a simple encryption and decryption program using 10 different ciphers.
+Last Modification Date: 18/3/2024.
+Author1: Zeyad Mohamed Arafat   20230161   s21
+Author2: Youssef Ahmed Beshir   20230476   s21
+Author3: John Ayman Demian      20230109   s21
+Teaching Assistant: Rana
 
 Zeyad Mohamed Arafat:
     Route Cipher
@@ -26,7 +27,6 @@ Youssef Ahmed Beshir:
 
 
 #include <bits/stdc++.h>
-#include <map>
 using namespace std;
 
 
@@ -39,53 +39,6 @@ string strip(const string& sentence){
         }
     }
     return strippedSentence;
-}
-
- // Baconian Cipher
-void baconian_encryption(string textToEncrypt){
-    string encryptedText = "";
-    map<char, string> encryptionMap = {
-        {'A', "aaaaa"}, {'B', "aaaab"}, {'c', "aaaba"}, {'D', "aaabb"}, {'E', "aabaa"}, {'F', "aabab"}, {'G', "aabba"},
-        {'H', "aabbb"}, {'I', "abaaa"}, {'J', "abaab"}, {'k', "ababa"}, {'L', "ababb"}, {'M', "abbaa"}, {'N', "abbab"},
-        {'O', "abbba"}, {'P', "abbbb"}, {'Q', "baaaa"}, {'R', "baaab"}, {'S', "baaba"}, {'T', "baabb"}, {'U', "babaa"},
-        {'V', "babab"}, {'W', "babba"}, {'X', "babbb"}, {'Y', "bbaaa"}, {'Z', "bbaab"}};
-
-    getline(cin, textToEncrypt);
-    for (int i = 0; i < textToEncrypt.length(); i++){
-        if (isalpha(textToEncrypt[i])){
-            encryptedText += encryptionMap[toupper(textToEncrypt[i])];
-        }
-        else{
-            encryptedText += textToEncrypt[i];
-        }
-
-    }
-    cout << encryptedText << endl;
-}
-
-
-void baconian_decryption(string textToDecrypt){
-    string decryptedText = "", code = "";
-    map<string, string > decryptionMap = {
-        {"aaaaa", "A"}, {"aaaab", "B"}, {"aaaba", "C"}, {"aaabb", "D"}, {"aabaa", "E"}, {"aabab", "F"}, {"aabba", "G"},
-        {"aabbb", "H"}, {"abaaa", "I"}, {"abaab", "J"}, {"ababa", "K"}, {"ababb", "L"}, {"abbaa", "M"}, {"abbab", "N"},
-        {"abbba", "O"}, {"abbbb", "P"}, {"baaaa", "Q"}, {"baaab", "R"}, {"baaba", "S"}, {"baabb", "T"}, {"babaa", "U"},
-        {"babab", "V"}, {"babba", "V"}, {"babbb", "X"}, {"bbaaa", "Y"}, {"bbaab", "Z"}};
-    for (int i = 0; i < textToDecrypt.length(); i++){
-        if (isalpha(textToDecrypt[i])){
-            code += textToDecrypt[i];
-            if (code.length() % 5 == 0 ){
-                decryptedText += decryptionMap[code];
-                code = "";
-            }
-
-        }
-        else{
-            decryptedText += textToDecrypt[i];
-        }
-
-    }
-    cout << decryptedText << endl;
 }
 
 
@@ -114,7 +67,7 @@ void xor_encryption(const string& message){
     string keyInput, key, output, hexaOutput;
     key = "";
     cout << "Welcome to the XOR cipher, a secret key of any number of characters (letters, digits) is required."
-    << endl << endl;
+         << endl << endl;
     cout << "Enter the secret key" << endl;
     cout << "->";
 
@@ -182,7 +135,7 @@ void xor_decryption(string message){
     key = "";
 
     cout << "Welcome to the XOR cipher, a secret key of any number of characters (letters, digits) is required."
-    << endl << endl;
+         << endl << endl;
     cout << "Enter the secret key." << endl;
     cout << "->";
 
@@ -353,12 +306,14 @@ void vignere_decryption(string message){
 
 
 // Affine Cipher
+// Function to calculate the modulo operation with positive numbers
 int modulo(int a, int b) {
     return (a % b + b) % b;
 }
 
-
+// Function to encrypt text using the Affine Cipher
 void encryptAffineCipher(const string& text) {
+    // Map to store the affine characters
     map<char, int> affine_map = {
             {'a', 0}, {'b', 1}, {'c', 2}, {'d', 3}, {'e', 4},
             {'f', 5}, {'g', 6}, {'h', 7}, {'i', 8}, {'j', 9},
@@ -368,14 +323,16 @@ void encryptAffineCipher(const string& text) {
             {'z', 25}
     };
 
+    // Map to store the reverse mapping for decryption
     map<int, char> reverse_affine_map;
     for (const auto& pair : affine_map) {
         reverse_affine_map[pair.second] = pair.first;
     }
-
+    // set variables
     string clear_text, cipher_text;
     int a, b, result;
 
+    // Input loop for obtaining valid values of a and b
     while (true) {
         cout << "Enter (a, b): ";
         cin >> a >> b;
@@ -389,14 +346,12 @@ void encryptAffineCipher(const string& text) {
             cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
         }
     }
-
     // Process the input text
     for (char i : text) {
         if (isalpha(i)) {
             clear_text += tolower(i); // Convert to lowercase
         }
     }
-
     // Apply the affine cipher and build the cipher text
     for (char i : clear_text) {
         result = (a * affine_map[i] + b) % 26;
@@ -406,8 +361,9 @@ void encryptAffineCipher(const string& text) {
     cout << "Cipher text: " << cipher_text << endl << endl;
 }
 
-
+// Function to decrypt text encrypted using the Affine Cipher
 void decryptAffineCipher(const string& text) {
+    // Map to store the affine characters
     map<char, int> affine_map = {
             {'a', 0}, {'b', 1}, {'c', 2}, {'d', 3}, {'e', 4},
             {'f', 5}, {'g', 6}, {'h', 7}, {'i', 8}, {'j', 9},
@@ -417,6 +373,7 @@ void decryptAffineCipher(const string& text) {
             {'z', 25}
     };
 
+    // Map to store the reverse mapping for decryption
     map<int, char> reverse_affine_map;
     for (const auto& pair : affine_map) {
         reverse_affine_map[pair.second] = pair.first;
@@ -424,11 +381,13 @@ void decryptAffineCipher(const string& text) {
 
     string clear_text, decipher_text;
     int b, c, result;
+
+    // Input loop for obtaining valid values of b and c
     while (true) {
-        cout << "Enter (b , c): ";
+        cout << "Enter (b, c): ";
         cin >> b >> c;
 
-        // Check if both a and b are positive integers
+        // Check if both b and c are positive integers
         if (b > 0 && c > 0) {
             break; // Exit the loop if both are valid
         } else {
@@ -437,21 +396,22 @@ void decryptAffineCipher(const string& text) {
             cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
         }
     }
+
     // Process the input text
     for (char i : text) {
         if (isalpha(i)) {
             clear_text += tolower(i); // Convert to lowercase
         }
     }
+
     // Apply the affine cipher and build the deciphered text
     for (char i : clear_text) {
-        result = modulo(c * (affine_map[i] - b) ,26) ;
+        result = modulo(c * (affine_map[i] - b), 26);
         decipher_text += toupper(reverse_affine_map[result]); // Convert to uppercase
     }
 
     cout << "Deciphered text: " << decipher_text << endl << endl;
 }
-
 
 // Polybius square Cipher
 bool poly_decrypted_validity(string & encrypted){
@@ -839,6 +799,7 @@ void route_cipher_decryption(const string& encrypted_sentence){
 
 // Morse code Cipher
 void morse_code_cipher(const string& text) {
+    // set morse map
     map <char , string>  morse_cipher = {
             {'a' , ".-"}, {'b' , "-..."}, {'c' , "-.-."} ,{'d' , "-.."} , {'e',"."} ,
             {'f' , "..-." },{'g' , "--."} , {'h',"...."},{'i',".."}, {'j',".---"} , {'k',"-.-" },
@@ -846,18 +807,26 @@ void morse_code_cipher(const string& text) {
             {'r' , ".-."} , {'s' , "..."} , {'t' , "-" } , {'u',"..-" } , {'v',"...-" } , {'w',".--" } ,
             {'x' , "-..-" } , {'y',"-.--" } , {'z',"--.."},{'1',".----"},{'2',"..---"},{'3',"...--"},
             {'4',"....-"},{'5',"....."},{'6',"-...."},{'7',"--..."},{'8',"---.."},{'9',"----."},{'0',"-----"} } ;
+    // set main variables
     string clear_text , cipher_text;
     cipher_text = "" ;
-
+    // check input validation
     for (char i : text)
     {
+        // clear text to contain only letters and numbers
         if(isalpha(i) || isdigit(i)){
             clear_text += tolower(i) ;
-        } else if (i == ' ') { // If the character is a space
-            clear_text += " "; // Add a space to the clear_text directly
+            // If the character is a space
+        } else if (i == ' ') {
+            // Add a space to the clear_text directly
+            clear_text += " ";
+            // print invalid input
+        } else{
+            cout << "Invalid Input , Try again " ;
+            break;
         }
     }
-
+    // collect char
     for (char i : clear_text)
     {
         if (i == ' ') {
@@ -867,11 +836,13 @@ void morse_code_cipher(const string& text) {
             cipher_text += " "; // Add one space between letters
         }
     }
+    // print result
     cout << cipher_text << endl << endl;
 }
 
 
 void morse_code_decipher(const string& text) {
+    // set the morse table
     map<string, char> morse_decipher = {
             {".-", 'a'}, {"-...", 'b'}, {"-.-.", 'c'}, {"-..", 'd'}, {".", 'e'},
             {"..-.", 'f'}, {"--.", 'g'}, {"....", 'h'}, {"..", 'i'}, {".---", 'j'}, {"-.-", 'k'},
@@ -879,27 +850,35 @@ void morse_code_decipher(const string& text) {
             {".-.", 'r'}, {"...", 's'}, {"-", 't'}, {"..-", 'u'}, {"...-", 'v'}, {".--", 'w'},
             {"-..-", 'x'}, {"-.--", 'y'}, {"--..", 'z'}, {".----", '1'}, {"..---", '2'}, {"...--", '3'},
             {"....-", '4'}, {".....", '5'}, {"-....", '6'}, {"--...", '7'}, {"---..", '8'}, {"----.", '9'}, {"-----", '0'}};
-
+    // set main variables
     string decipher_text, morse_char;
     decipher_text = "";
-
+    // make for loop to check validation of input
     for (char i : text) {
+        //if text contain (. , -) add it to convert
         if (i == '.' || i == '-') {
             morse_char += i;
+            // if space add it to separation
         } else if (i == ' ') {
             if (!morse_char.empty()) {
+                // convert all char
                 decipher_text += morse_decipher[morse_char];
                 morse_char = "";
             } else {
-                decipher_text += ""; // Add space for word separation
+                decipher_text += " "; // Add space for word separation
             }
+        } else {
+            // if input is valid
+            cout<< "Invalid Morse code character detected. Please enter valid Morse code (dots, dashes, and spaces only): ";
+            break;
+
         }
     }
-
+    // check all char converted
     if (!morse_char.empty()) {
         decipher_text += morse_decipher[morse_char];
     }
-
+    // print result
     cout << decipher_text << endl << endl;
 }
 
@@ -1252,7 +1231,7 @@ void atbash_encryption(string textToEncrypt){
 
     }
     else if (key == "4"){ // if the key is "4", split the alphabet to four parts.
-    // the same logic goes for the key "4" as in the key "2".
+        // the same logic goes for the key "4" as in the key "2".
         string firstAlpha = "ABCDEF", secondAlpha = "MLKJIH", thirdAlpha = "NOPQRS", fourthAlpha = "ZYXWVU";
         for (int i = 0; i < textToEncrypt.length(); i++){
             if (isalpha(textToEncrypt[i])){
@@ -1383,15 +1362,15 @@ int main() {
 
             cout << "Which Cipher do you like to choose?" << endl;
             cout << "0- Affine cipher" << endl ;
-            cout << "1- Polybius Square cipher" << endl;
-            cout << "2- Route cipher" << endl;
-            cout << "3- Rail-fence cipher" << endl;
-            cout << "4- Simple substitution cipher" << endl;
-            cout << "5- Atbash cipher" << endl;
-            cout << "6- Baconian cipher" << endl;
+            cout << "1- Route cipher" << endl;
+            cout << "2- Atbash cipher" << endl;
+            cout << "3- Vignere cipher" << endl;
+            cout << "4- Baconian cipher" << endl;
+            cout << "5- Simple substitution cipher" << endl;
+            cout << "6- Polybius Square cipher" << endl;
             cout << "7- Morse code cipher" << endl;
             cout << "8- XOR cipher" << endl;
-            cout << "9- Vignere cipher" << endl;
+            cout << "9- Rail-fence cipher" << endl;
             cout << "->";
 
             string cipherChoice;
@@ -1402,51 +1381,42 @@ int main() {
                     encryptAffineCipher(message);
                     break;
                 }
-                else if (cipherChoice == "1"){           // for the polybius square cipher encryptedText.
-                    polybius_square_encryption(message);
-                    break;
-                }
-
-                else if (cipherChoice == "2"){      // for the route cipher encryptedText.
+                else if (cipherChoice == "1"){      // for the route cipher encryptedText.
                     route_cipher_encryption(message);
                     break;
                 }
-
-                else if (cipherChoice == "3"){      // For the rail-fence cipher encryptedText.
-                    rail_Fence_Encrypt(message);
-                    break;
-                }
-
-                else if (cipherChoice == "4"){
-                    simple_sub_encryption(message);
-                    break;
-                }
-
-                else if (cipherChoice == "5"){
+                else if (cipherChoice == "2"){
                     atbash_encryption(message);
                     break;
                 }
-
-                else if (cipherChoice == "6"){
-                    baconian_encryption(message);
+                else if (cipherChoice == "3"){
+                    vignere_encryption(message);
                     break;
                 }
+                else if (cipherChoice == "4"){
 
+                    break;
+                }
+                else if (cipherChoice == "5"){
+                    simple_sub_encryption(message);
+                    break;
+                }
+                else if (cipherChoice == "6"){           // for the polybius square cipher encryptedText.
+                    polybius_square_encryption(message);
+                    break;
+                }
                 else if (cipherChoice == "7"){
                     morse_code_cipher(message);
                     break;
                 }
-
                 else if (cipherChoice == "8"){
                     xor_encryption(message);
                     break;
                 }
-
-                else if (cipherChoice == "9"){
-                    vignere_encryption(message);
+                else if (cipherChoice == "9"){      // For the rail-fence cipher encryptedText.
+                    rail_Fence_Encrypt(message);
                     break;
                 }
-
                 else{
                     cout << "Please enter a valid choice" << endl << endl;
                     break;
@@ -1464,15 +1434,15 @@ int main() {
 
             cout << "What cipher would you like to use?" << endl;
             cout << "0- Affine cipher" << endl ;
-            cout << "1- Polybius Square cipher" << endl;
-            cout << "2- Route cipher" << endl;
-            cout << "3- Rail-fence cipher" << endl;
-            cout << "4- Simple substitution cipher" << endl;
-            cout << "5- Atbash cipher" << endl;
-            cout << "6- Baconian cipher" << endl;
+            cout << "1- Route cipher" << endl;
+            cout << "2- Atbash cipher" << endl;
+            cout << "3- Vignere cipher" << endl;
+            cout << "4- Baconian cipher" << endl;
+            cout << "5- Simple substitution cipher" << endl;
+            cout << "6- Polybius Square cipher" << endl;
             cout << "7- Morse code cipher" << endl;
             cout << "8- XOR cipher" << endl;
-            cout << "9- Vignere cipher" << endl;
+            cout << "9- Rail-fence cipher" << endl;
             cout << "->";
 
             string cipher_choice;
@@ -1483,45 +1453,40 @@ int main() {
                     decryptAffineCipher(encrypted);
                     break;
                 }
-                else if (cipher_choice == "1"){              // for the polybius square cipher decryption.
-                    polybius_square_decryption(encrypted);
-                    break;
-                }
-                else if (cipher_choice == "2"){         // for the route cipher decryption.
+                else if (cipher_choice == "1"){      // for the route cipher encryptedText.
                     route_cipher_decryption(encrypted);
                     break;
                 }
-                else if (cipher_choice == "3"){         // For the rail-fence cipher decryption.
-                    rail_Fence_Decrypt(encrypted);
-                    break;
-                }
-                else if (cipher_choice == "4"){
-                    simple_sub_decryption(encrypted);
-                    break;
-                }
-
-                else if (cipher_choice == "5"){
+                else if (cipher_choice == "2"){
                     atbash_decryption(encrypted);
                     break;
                 }
-
-                else if (cipher_choice == "6")
-                {
-                    baconian_decryption(encrypted);
+                else if (cipher_choice == "3"){
+                    vignere_decryption(encrypted);
                     break;
                 }
+                else if (cipher_choice == "4"){
 
-                else if (cipher_choice == "7") {
+                    break;
+                }
+                else if (cipher_choice == "5"){
+                    simple_sub_decryption(encrypted);
+                    break;
+                }
+                else if (cipher_choice == "6"){           // for the polybius square cipher encryptedText.
+                    polybius_square_decryption(encrypted);
+                    break;
+                }
+                else if (cipher_choice == "7"){
                     morse_code_decipher(encrypted);
                     break;
-
                 }
                 else if (cipher_choice == "8"){
                     xor_decryption(encrypted);
                     break;
                 }
-                else if (cipher_choice == "9"){
-                    vignere_decryption(encrypted);
+                else if (cipher_choice == "9"){      // For the rail-fence cipher encryptedText.
+                    rail_Fence_Decrypt(encrypted);
                     break;
                 }
                 else{
