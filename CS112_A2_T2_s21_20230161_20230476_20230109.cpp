@@ -60,7 +60,7 @@ void baconian_encryption(string textToEncrypt){
         }
 
     }
-    cout << encryptedText << endl;
+    cout << encryptedText;
 }
 
 
