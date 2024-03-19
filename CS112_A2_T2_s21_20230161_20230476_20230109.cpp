@@ -877,7 +877,7 @@ void morse_code_cipher(const string& text) {
             // Add a space to the clear_text directly
             clear_text += " ";
             // print invalid input
-        } 
+        }
     }
     // collect char
     for (char i : clear_text)
@@ -890,7 +890,7 @@ void morse_code_cipher(const string& text) {
         }
     }
     // print result
-    cout << cipher_text << endl << endl;
+    cout <<"ciphered text : " <<cipher_text << endl << endl;
 }
 
 
@@ -932,7 +932,7 @@ void morse_code_decipher(const string& text) {
         decipher_text += morse_decipher[morse_char];
     }
     // print result
-    cout << decipher_text << endl << endl;
+    cout <<"deciphered text : " <<decipher_text << endl << endl;
 }
 
 
