@@ -1442,7 +1442,7 @@ int main() {
                     encryptAffineCipher(message);
                     break;
                 }
-                else if (cipherChoice == "1"){      // for the route cipher encryptedText.
+                else if (cipherChoice == "1"){     
                     route_cipher_encryption(message);
                     break;
                 }
@@ -1462,7 +1462,7 @@ int main() {
                     simple_sub_encryption(message);
                     break;
                 }
-                else if (cipherChoice == "6"){           // for the polybius square cipher encryptedText.
+                else if (cipherChoice == "6"){          
                     polybius_square_encryption(message);
                     break;
                 }
@@ -1474,7 +1474,7 @@ int main() {
                     xor_encryption(message);
                     break;
                 }
-                else if (cipherChoice == "9"){      // For the rail-fence cipher encryptedText.
+                else if (cipherChoice == "9"){      
                     rail_Fence_Encrypt(message);
                     break;
                 }
@@ -1514,7 +1514,7 @@ int main() {
                     decryptAffineCipher(encrypted);
                     break;
                 }
-                else if (cipher_choice == "1"){      // for the route cipher encryptedText.
+                else if (cipher_choice == "1"){      
                     route_cipher_decryption(encrypted);
                     break;
                 }
@@ -1534,7 +1534,7 @@ int main() {
                     simple_sub_decryption(encrypted);
                     break;
                 }
-                else if (cipher_choice == "6"){           // for the polybius square cipher encryptedText.
+                else if (cipher_choice == "6"){           
                     polybius_square_decryption(encrypted);
                     break;
                 }
@@ -1546,7 +1546,7 @@ int main() {
                     xor_decryption(encrypted);
                     break;
                 }
-                else if (cipher_choice == "9"){      // For the rail-fence cipher encryptedText.
+                else if (cipher_choice == "9"){      
                     rail_Fence_Decrypt(encrypted);
                     break;
                 }
